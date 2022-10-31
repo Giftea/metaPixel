@@ -1,5 +1,5 @@
 import { heroText } from "../../../data";
-import SearchForm from "../InfinitePhotos/SearchForm";
+import SearchForm from "../../InfinitePhotos/SearchForm";
 
 const Hero = () => {
   return (

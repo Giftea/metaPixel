@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { Box, Flex, Spinner } from "@chakra-ui/react";
 import InfiniteScroll from "react-infinite-scroll-component";
 import Images from "./Images";
-import { dummyPhotos } from "../../../data";
+import { dummyPhotos } from "../../data";
 
 const Loader = () => (
   <Flex justifyContent="center" py="2rem">
