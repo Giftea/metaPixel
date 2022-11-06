@@ -14,7 +14,7 @@ contract RewardCreator is AccessControl {
     ERC20 public immutable usdc;
 
     event RewardedCreator (address creatorAddress, uint amountToCreator);
-    event ContractRewarded (address metapixelContractAddress, uint amountToMetapixel);
+    event ContractRewarded (address pixeedContractAddress, uint amountToPixeed);
 
     event FundingForPixeedWithdrawed(address withdrawAddress, uint withdrawAmount);
 
@@ -26,13 +26,13 @@ contract RewardCreator is AccessControl {
         usdc = ERC20(usdcAddress);
     }
 
-    function rewardCreator(uint valueToCreator, uint percentageToMetapixel, address creatorAddress) external {
+    function rewardCreator(uint valueToCreator, uint percentageToPixeed, address creatorAddress) external {
         // safe transfer from msg.sender to creator with amount valueToCreator
         usdc.safeTransfer(creatorAddress, valueToCreator);
         emit RewardedCreator(creatorAddress, valueToCreator);
-        // safe transfer from msg.snder to contractMatapixel with amount percentageToMetaPixel
-        usdc.transferFrom(msg.sender, address(this), percentageToMetapixel);
-        emit ContractRewarded (address(this), percentageToMetapixel);
+        // safe transfer from msg.snder to contractMatapixel with amount percentageToPixeed
+        usdc.transferFrom(msg.sender, address(this), percentageToPixeed);
+        emit ContractRewarded (address(this), percentageToPixeed);
     }
 
     // token to withdraw IERC20?
