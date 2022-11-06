@@ -1,11 +1,14 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.9;
 
-import {Ownable} from "@openzeppelin/contracts/access/Ownable.sol";
+//import {Ownable} from "@openzeppelin/contracts/access/Ownable.sol";
 import {ERC20} from "@openzeppelin/contracts/token/ERC20/ERC20.sol";
 import {SafeERC20} from "@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol";
+import {AccessControl} from "@openzeppelin/contracts/access/AccessControl.sol";
 
-contract RewardCreator is Ownable {
+contract RewardCreator is AccessControl {
+    bytes32 public constant PIXEED_TEAM = keccak256("PIXEED_TEAM");
+
     using SafeERC20 for ERC20;
 
     ERC20 public immutable usdc;
@@ -13,11 +16,13 @@ contract RewardCreator is Ownable {
     event RewardedCreator (address creatorAddress, uint amountToCreator);
     event ContractRewarded (address metapixelContractAddress, uint amountToMetapixel);
 
-    event FundingForMetapixelWithdrawed(address withdrawAddress, uint withdrawAmount);
+    event FundingForPixeedWithdrawed(address withdrawAddress, uint withdrawAmount);
 
     constructor (
         address usdcAddress
-    ) Ownable() {
+    ) {
+        _grantRole(DEFAULT_ADMIN_ROLE, msg.sender);
+        _grantRole(PIXEED_TEAM, msg.sender);
         usdc = ERC20(usdcAddress);
     }
 
@@ -31,10 +36,16 @@ contract RewardCreator is Ownable {
     }
 
     // token to withdraw IERC20?
-    function withdrawFundingMetapixel() external onlyOwner{
+    function withdrawFundingPixeed() external {
+        require(hasRole(PIXEED_TEAM, msg.sender));
         // Transfer USDC tokens to the users wallet
         uint withdrawAmount = address(this).balance;
         usdc.transfer(msg.sender, withdrawAmount);
-        emit FundingForMetapixelWithdrawed(msg.sender, withdrawAmount);
+        emit FundingForPixeedWithdrawed(msg.sender, withdrawAmount);
+    }
+
+    // function to show balance in this contract
+    function getBalance() public view returns (uint) {
+        return address(this).balance;
     }
 }
