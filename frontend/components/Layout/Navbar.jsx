@@ -9,6 +9,7 @@ import {
 import { ConnectButton } from "@rainbow-me/rainbowkit";
 import Link from "next/link";
 import { useRouter } from "next/router";
+import LensLogin from "./LensLogin";
 
 const Navbar = () => {
   const router = useRouter();
@@ -59,7 +60,8 @@ const Navbar = () => {
               Settings
             </MenuItem>
             <MenuDivider />
-            <MenuItem>Logout</MenuItem>
+            {/* <MenuItem>Logout</MenuItem> */}
+            <LensLogin/>
           </MenuList>
         </Menu>
       </Stack>
