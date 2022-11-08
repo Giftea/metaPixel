@@ -6,20 +6,21 @@ import { getDefaultWallets, RainbowKitProvider } from "@rainbow-me/rainbowkit";
 import { chain, configureChains, createClient, WagmiConfig } from "wagmi";
 import { alchemyProvider } from "wagmi/providers/alchemy";
 import { publicProvider } from "wagmi/providers/public";
+import { infuraProvider } from "wagmi/providers/infura";
 
 const { chains, provider } = configureChains(
   [
-    chain.polygonMumbai,
-    chain.mainnet,
-    chain.polygon,
-    chain.optimism,
-    chain.arbitrum,
+    chain.polygonMumbai
+    // chain.mainnet,
+    // chain.polygon,
+    // chain.optimism,
+    // chain.arbitrum,
   ],
-  [alchemyProvider({ apiKey: process.env.ALCHEMY_ID }), publicProvider()]
+  [infuraProvider({ apiKey: process.env.NEXT_PUBLIC_INFURA_ID }), publicProvider()]
 );
 
 const { connectors } = getDefaultWallets({
-  appName: "My RainbowKit App",
+  appName: "pixeed",
   chains,
 });
 
