@@ -1,11 +1,10 @@
-import "../styles/globals.css";
+// import "../styles/globals.css";
 import "@rainbow-me/rainbowkit/styles.css";
 import { midnightTheme } from "@rainbow-me/rainbowkit";
 import { ChakraProvider } from "@chakra-ui/react";
 import { getDefaultWallets, RainbowKitProvider } from "@rainbow-me/rainbowkit";
 import { chain, configureChains, createClient, WagmiConfig } from "wagmi";
-import { alchemyProvider } from "wagmi/providers/alchemy";
-import { publicProvider } from "wagmi/providers/public";
+import { jsonRpcProvider } from "wagmi/providers/jsonRpc";
 
 const { chains, provider } = configureChains(
 	[chain.polygonMumbai],
