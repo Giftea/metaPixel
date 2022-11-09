@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
-import { createProfile, client, challenge, authenticate } from "../../api";
+import { createProfile, challenge, authenticate } from "../../api";
+import { client } from "../../apollo-client";
 import { useAccount } from "wagmi";
 import { ethers } from 'ethers'
 
@@ -33,7 +34,13 @@ export default function CreateLensProfile() {
       /* if user authentication is successful, you will receive an accessToken and refreshToken */
       const { data: { authenticate: { accessToken }}} = authData
       console.log({ accessToken })
-      setToken(accessToken)
+      // setToken(accessToken)
+
+    localStorage.setItem(
+      "lens_auth_token",
+      accessToken.data.authenticate.accessToken
+    )
+
     } catch (err) {
       console.log('Error signing in: ', err)
     }
