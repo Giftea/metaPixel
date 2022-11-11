@@ -224,7 +224,7 @@ export const getProfile = async (request) => {
 };
 
 const GET_PUBLICATIONS = `
-  query($id: ProfileId!) {
+  query Publications($id: ProfileId!) {
     publications(request: {
       profileId: $id,
       publicationTypes: [POST, COMMENT, MIRROR],
@@ -2046,3 +2046,21 @@ query DefaultProfile($request: DefaultProfileRequest!) {
   }
 }
 `
+
+
+const GET_CHALLENGE = `
+  query($request: ChallengeRequest!) {
+    challenge(request: $request) { text }
+  }
+`;
+
+export const generateChallenge = (address) => {
+  return apolloClient.query({
+    query: gql(GET_CHALLENGE),
+    variables: {
+      request: {
+        address,
+      },
+    },
+  });
+};
