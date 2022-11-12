@@ -10,9 +10,21 @@ import { ConnectButton } from "@rainbow-me/rainbowkit";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import LensLogin from "./LensLogin";
+import {getDefaultProfile} from "../../utils/getDefaultProfile"
+import { useAccount } from "wagmi";
 
 const Navbar = () => {
   const router = useRouter();
+  const { address } = useAccount()
+
+  const handleGetProfile = async () => {
+    let response = await getDefaultProfile(address);
+    if(response.data.defaultProfile?.handle){
+      router.push(`/profile/${response.data.defaultProfile.handle}`)
+    } else {
+      router.push(`/create-profile`)
+    }
+  }
   return (
     <Stack
       direction={"row"}
@@ -54,7 +66,7 @@ const Navbar = () => {
             border="none"
           />
           <MenuList>
-            <MenuItem onClick={() => router.push("/profile")}>Profile</MenuItem>
+            <MenuItem onClick={handleGetProfile}>Profile</MenuItem>
             <MenuDivider />
             <MenuItem onClick={() => router.push("/profile/settings")}>
               Settings

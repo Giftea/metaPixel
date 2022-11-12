@@ -1,11 +1,5 @@
-import { ApolloClient, InMemoryCache, gql } from '@apollo/client'
-
-const API_URL = 'https://api.lens.dev'
-
-export const client = new ApolloClient({
-  uri: API_URL,
-  cache: new InMemoryCache()
-})
+import { gql } from '@apollo/client'
+import { client } from "./apollo-client"
 
 export const challenge = gql`
   query Challenge($address: EthereumAddress!) {
@@ -122,7 +116,7 @@ const GET_PROFILES = `
 `;
 
 export const getProfiles = async (request) => {
-  const response = await apolloClient.query({
+  const response = await client.query({
     query: gql(GET_PROFILES),
     variables: {
       request,
@@ -219,7 +213,7 @@ const GET_PROFILE = `
 `;
 
 export const getProfile = async (request) => {
-  const response = await apolloClient.query({
+  const response = await client.query({
     query: gql(GET_PROFILE),
     variables: {
       request,
@@ -230,7 +224,7 @@ export const getProfile = async (request) => {
 };
 
 const GET_PUBLICATIONS = `
-  query($id: ProfileId!) {
+  query Publications($id: ProfileId!) {
     publications(request: {
       profileId: $id,
       publicationTypes: [POST, COMMENT, MIRROR],
@@ -542,7 +536,7 @@ const GET_PUBLICATIONS = `
 `;
 
 export const getPublications = async (id) => {
-  const response = await apolloClient.query({
+  const response = await client.query({
     query: gql(GET_PUBLICATIONS),
     variables: {
       id,
@@ -567,7 +561,7 @@ const CREATE_PROFILE = `
 `;
 
 export const createProfile = (createProfileRequest) => {
-  return apolloClient.mutate({
+  return client.mutate({
     mutation: gql(CREATE_PROFILE),
     variables: {
       request: createProfileRequest,
@@ -673,7 +667,7 @@ const GET_FOLLOWERS = `
 `;
 
 export const getFollowers = async (profileId) => {
-  const response = await apolloClient.query({
+  const response = await client.query({
     query: gql(GET_FOLLOWERS),
     variables: {
       request: {
@@ -720,7 +714,7 @@ const CREATE_POST_TYPED_DATA = `
 `;
 
 export const createPostTypedData = (createPostTypedDataRequest) => {
-  return apolloClient.mutate({
+  return client.mutate({
     mutation: gql(CREATE_POST_TYPED_DATA),
     variables: {
       request: createPostTypedDataRequest,
@@ -805,7 +799,7 @@ const HAS_TX_BEEN_INDEXED = `
 `;
 
 export const hasTxBeenIndexed = (txHash) => {
-  return apolloClient.query({
+  return client.query({
     query: gql(HAS_TX_BEEN_INDEXED),
     variables: {
       request: {
@@ -847,7 +841,7 @@ mutation ($request: FollowRequest! ) {
 
 
 export const createFollowTypedData = (createFollowTypedDataRequest) => {
-  return apolloClient.mutate({
+  return client.mutate({
     mutation: gql(CREATE_FOLLOW_TYPED_DATA),
     variables: {
       request: createFollowTypedDataRequest,
@@ -1246,7 +1240,7 @@ fragment ReferenceModuleFields on ReferenceModule {
 `;
 
 export const getTimeline = async (timelineRequest) => {
-  const response = await apolloClient.query({
+  const response = await client.query({
     query: gql(GET_TIMELINE),
     variables: {
       request: timelineRequest,
@@ -1852,3 +1846,221 @@ query ($followingRequest2: FollowingRequest!) {
     }
   }
 `
+
+const PROFILE_SEARCH = `
+query ($request: SearchQueryRequest!) {
+  search(request: $request) {
+    
+  }
+}
+{
+  ... on ProfileSearchResult {
+    __typename 
+    items {
+      ... on Profile {
+        ...ProfileFields
+      }
+    }
+    pageInfo {
+      prev
+      totalCount
+      next
+    }
+  }
+}
+}
+
+fragment MediaFields on Media {
+url
+mimeType
+}
+
+fragment ProfileFields on Profile {
+profileId: id,
+name
+bio
+attributes {
+  displayType
+  traitType
+  key
+  value
+}
+isFollowedByMe
+isFollowing(who: null)
+followNftAddress
+metadata
+isDefault
+handle
+picture {
+  ... on NftImage {
+    contractAddress
+    tokenId
+    uri
+    verified
+  }
+  ... on MediaSet {
+    original {
+      ...MediaFields
+    }
+  }
+}
+coverPicture {
+  ... on NftImage {
+    contractAddress
+    tokenId
+    uri
+    verified
+  }
+  ... on MediaSet {
+    original {
+      ...MediaFields
+    }
+  }
+}
+ownedBy
+dispatcher {
+  address
+}
+stats {
+  totalFollowers
+  totalFollowing
+  totalPosts
+  totalComments
+  totalMirrors
+  totalPublications
+  totalCollects
+}
+followModule {
+  ... on FeeFollowModuleSettings {
+  type
+  amount {
+    asset {
+      name
+      symbol
+      decimals
+      address
+    }
+    value
+  }
+  recipient
+  }
+  ... on ProfileFollowModuleSettings {
+    type
+    contractAddress
+  }
+  ... on RevertFollowModuleSettings {
+    type
+    contractAddress
+  }
+  ... on UnknownFollowModuleSettings {
+    type
+    contractAddress
+    followModuleReturnData
+  }
+}
+}
+`
+
+export const DEFAULT_PROFILE = `
+query DefaultProfile($request: DefaultProfileRequest!) {
+  defaultProfile(request: $request) {
+    id
+    name
+    bio
+    isDefault
+    attributes {
+      displayType
+      traitType
+      key
+      value
+    }
+    followNftAddress
+    metadata
+    handle
+    picture {
+      ... on NftImage {
+        contractAddress
+        tokenId
+        uri
+        chainId
+        verified
+      }
+      ... on MediaSet {
+        original {
+          url
+          mimeType
+        }
+      }
+    }
+    coverPicture {
+      ... on NftImage {
+        contractAddress
+        tokenId
+        uri
+        chainId
+        verified
+      }
+      ... on MediaSet {
+        original {
+          url
+          mimeType
+        }
+      }
+    }
+    ownedBy
+    dispatcher {
+      address
+      canUseRelay
+    }
+    stats {
+      totalFollowers
+      totalFollowing
+      totalPosts
+      totalComments
+      totalMirrors
+      totalPublications
+      totalCollects
+    }
+    followModule {
+      ... on FeeFollowModuleSettings {
+        type
+        contractAddress
+        amount {
+          asset {
+            name
+            symbol
+            decimals
+            address
+          }
+          value
+        }
+        recipient
+      }
+      ... on ProfileFollowModuleSettings {
+       type
+      }
+      ... on RevertFollowModuleSettings {
+       type
+      }
+    }
+  }
+}
+`
+
+
+const GET_CHALLENGE = `
+  query($request: ChallengeRequest!) {
+    challenge(request: $request) { text }
+  }
+`;
+
+export const generateChallenge = (address) => {
+  return apolloClient.query({
+    query: gql(GET_CHALLENGE),
+    variables: {
+      request: {
+        address,
+      },
+    },
+  });
+};

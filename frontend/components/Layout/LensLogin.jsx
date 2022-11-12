@@ -1,7 +1,8 @@
 import { useEffect, useState } from 'react'
 import { ethers } from 'ethers'
-import { client, challenge, authenticate } from '../../api'
+import { challenge, authenticate } from '../../api'
 import { MenuItem } from "@chakra-ui/react";
+import { client } from '../../apollo-client';
 
 export default function LensLogin() {
   /* local state variables to hold user's address and access token */
