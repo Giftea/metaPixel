@@ -1,7 +1,3 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
-
 body {
   margin: 0;
 }
@@ -16,9 +12,22 @@ body {
   background-repeat: no-repeat;
   background-size: cover;
   background-position: left;
-  height: 90vh;
+  height: 70vh;
 }
 
+.search-form::placeholder {
+  color: #ffffff;
+}
+
+/*  */
+.btn-primary {
+  background: #625da0;
+  backdrop-filter: blur(2px);
+  color: #ffffff;
+  padding: 10px 20px;
+  border-radius: 50px;
+  font-weight: bold;
+}
 /*  */
 .custom-image {
   cursor: pointer;

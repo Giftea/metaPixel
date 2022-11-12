@@ -334,7 +334,7 @@ export default function CreateProfile() {
                 )}
               </div>
             ) : (
-              <NeedConnectWallet message="Connect your wallet to access your homebase." />
+              <div>connect wallet</div>
             )}
           </>
         )}

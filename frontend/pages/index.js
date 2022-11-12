@@ -1,4 +1,4 @@
-import Hero from "../components/HomePage/Hero";
+import Hero from "../components/Hero";
 import InfinitePhotos from "../components/InfinitePhotos";
 import Navbar from "../components/Layout/Navbar";
 

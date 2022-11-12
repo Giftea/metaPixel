@@ -1,22 +1,20 @@
 import React from "react";
-import { FormControl, Input, Button, Stack } from "@chakra-ui/react";
+import { FormControl, Input, Stack } from "@chakra-ui/react";
+import { SearchIcon } from "@chakra-ui/icons";
 
 const SearchForm = () => {
   return (
     <FormControl as="form" maxW="40rem" mx="auto">
-      <Stack direction="row">
+      <Stack borderRadius={'8px'} px="4" bg="#ffffff14" alignItems="center" direction="row">
         <Input
-          bg="#ffffff14"
+          bg="none"
           color="#ffffff"
           border="none"
           isRequired
           placeholder="Search Photos"
-          mb=".5rem"
+          className="search-form"
         />
-
-        <Button type="submit" className="!text-[#333]">
-          Search
-        </Button>
+        <SearchIcon color={'#FFFFFF99'} />
       </Stack>
     </FormControl>
   );
