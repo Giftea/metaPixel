@@ -1,46 +1,37 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.9;
 
-//import {Ownable} from "@openzeppelin/contracts/access/Ownable.sol";
-import {ERC20} from "@openzeppelin/contracts/token/ERC20/ERC20.sol";
-import {SafeERC20} from "@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol";
+import {IERC20} from "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import {AccessControlEnumerable} from "@openzeppelin/contracts/access/AccessControlEnumerable.sol";
 
 contract RewardCreator is AccessControlEnumerable {
+    // contant for AccessControl of PIXEED_TEAM members
     bytes32 public constant PIXEED_TEAM = keccak256("PIXEED_TEAM");
+    
+    IERC20 public immutable ierc20;
 
-    using SafeERC20 for ERC20;
-
-    ERC20 public immutable usdc;
-
-    mapping (address => uint) public claimExpiryTimestampPerAddress;
-
-    event RewardedCreator (address creatorAddress, uint amountToCreator);
-    event ContractRewarded (address pixeedContractAddress, uint amountToPixeed);
+    event RewardedCreator (address creatorAddress, uint256 amountToCreator);
+    event ContractRewarded (address pixeedContractAddress, uint256 amountToPixeed);
 
     event FundingForPixeedWithdrawed(uint roleMemberCount, uint withdrawAmount);
 
     constructor (
-        address usdcAddress
+        address erc20Address
     ) {
         _grantRole(DEFAULT_ADMIN_ROLE, msg.sender);
         _grantRole(PIXEED_TEAM, msg.sender);
-        usdc = ERC20(usdcAddress);
+        ierc20 = IERC20(erc20Address);
     }
 
-    // modifier expiryTimestamp(address _pixeedWithdrawer) {
-    //     require(claimExpiryTimestampPerAddress[_pixeedWithdrawer] > block.timestamp, 
-    //     "Expiry date not over"
-    //     );       
-    //     _;
-    // }
 
-    function rewardCreator(uint valueToCreator, uint valueToPixeed, address creatorAddress) external {
+    function rewardCreator(uint256 valueToCreator, uint256 valueToPixeed, address creatorAddress) external  {
+        // require enough amount to send 
+        require(msg.sender.balance >= valueToCreator + valueToPixeed );
         // safe transfer from msg.sender to creator with amount valueToCreator
-        usdc.safeTransfer(creatorAddress, valueToCreator);
+        ierc20.transferFrom(msg.sender, creatorAddress, valueToCreator);
         emit RewardedCreator(creatorAddress, valueToCreator);
-        // safe transfer from msg.snder to contractMatapixel with amount percentageToPixeed
-        usdc.transferFrom(msg.sender, address(this), valueToPixeed);
+        // safe transfer from msg.sender to contractMatapixel with amount percentageToPixeed
+        ierc20.transferFrom(msg.sender, address(this), valueToPixeed);
         emit ContractRewarded (address(this), valueToPixeed);
     }
 
@@ -48,27 +39,19 @@ contract RewardCreator is AccessControlEnumerable {
     function withdrawFundingPixeed() external {
         require(hasRole(PIXEED_TEAM, msg.sender));
         // calculate withdraw amount based on the number of pixeed members
-         // Transfer USDC tokens to the users wallet
         uint roleMemberCount = getRoleMemberCount(PIXEED_TEAM);
-        //setClaimTimerForWalletAddress(msg.sender);
-        uint withdrawAmount = address(this).balance / roleMemberCount;
+        uint withdrawAmount = getBalance() / roleMemberCount;
         // send amount to all addresses of PIXEED_TEAM
         for (uint i = 0; i < roleMemberCount; i++) {
-             usdc.transfer(getRoleMember(PIXEED_TEAM, i), withdrawAmount);
+             ierc20.transfer(getRoleMember(PIXEED_TEAM, i), withdrawAmount);
         }
-        // transfer amount to all team members
+        // Emit Event that funnding to PIXEED_TEAM is performed
         emit FundingForPixeedWithdrawed(getRoleMemberCount(PIXEED_TEAM), withdrawAmount);
     }
-    // number of team member has to be set
-
-    // set limit during a month to claim for each address
-    // function setClaimTimerForWalletAddress(address pixeedWithdrawer) internal expiryTimestamp(pixeedWithdrawer) {
-    //     claimExpiryTimestampPerAddress[pixeedWithdrawer] = block.timestamp + 30 days;
-    // } 
 
 
     // function to show balance in this contract
-    function getBalance() public view returns (uint) {
-        return address(this).balance;
+    function getBalance() public view returns (uint256) {
+        return ierc20.balanceOf(address(this));
     }
 }
