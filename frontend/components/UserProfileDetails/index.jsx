@@ -1,15 +1,19 @@
 import { Avatar, Box, Flex, Spacer, Stack, Text } from "@chakra-ui/react";
 import { EditIcon } from "@chakra-ui/icons";
-import { client } from "../../apollo-client";
-import { getProfiles } from "../../lensCalls";
+import { getProfiles, getFollowers } from "../../lensCalls";
 import { useEffect, useState } from "react";
 import { useAccount } from "wagmi";
 import { useRouter } from "next/router";
+import FollowersModal from '../Modals/FollwersModal'
+import {useDisclosure,
+} from "@chakra-ui/react";
 
 const Profile = () => {
+  const { isOpen, onOpen, onClose } = useDisclosure()
   const router = useRouter();
   const { address } = useAccount();
   const [profiles, setProfiles] = useState([]);
+  const [followers, setFollowers] = useState([]);
   const [imgUrl, setImgUrl] = useState("");
 
   async function fetchProfiles() {
@@ -24,6 +28,18 @@ const Profile = () => {
       }
     } catch (error) {
       console.log("fetchProfiles ERROR:", error);
+    }
+  }
+
+  async function getMyFollowers() {
+    try {
+      let response = await getFollowers(profiles?.id);
+
+      setFollowers(response?.data?.followers?.items);
+      console.log(followers)
+      onOpen()
+    } catch (error) {
+      console.log(error);
     }
   }
   useEffect(() => {
@@ -43,7 +59,7 @@ const Profile = () => {
         </Box>
         <Spacer />
         <Box width={{ base: "auto", md: "70%" }}>
-          <Flex alignItems={'center'}>
+          <Flex alignItems={"center"}>
             {" "}
             <Text textAlign="center" mr={6} fontSize="4xl">
               {profiles?.name}
@@ -90,7 +106,7 @@ const Profile = () => {
               <Text color={"#625da0"} fontWeight="bold" mr={3}>
                 {profiles?.stats?.totalFollowers}
               </Text>
-              <Text>Followers</Text>
+              <Text cursor={'pointer'} onClick={() => getMyFollowers()}>Followers</Text>
             </Flex>{" "}
             <Flex fontSize="3xl" mr={8}>
               {" "}
@@ -112,6 +128,8 @@ const Profile = () => {
       <Text fontSize="xl" mt={20} color={"#666666"} fontWeight="bold">
         Your Photos
       </Text>
+
+      <FollowersModal isOpen={isOpen}  onClose ={onClose} followers={followers} userName={profiles?.name} />
     </Box>
   );
 };
