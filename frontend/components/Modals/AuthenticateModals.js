@@ -8,32 +8,14 @@ import {
   ModalCloseButton,
   Center,
   Heading,
-  InputGroup,
-  Input,
-  Box,
   useToast,
-  InputLeftAddon,
-  InputRightAddon,
-  Text,
 } from "@chakra-ui/react";
 import { ethers } from "ethers";
-import {
-  challenge,
-  authenticate,
-  createProfile,
-  getProfiles,
-  getProfile,
-  setMetadata,
-} from "../../lensCalls";
+import { challenge, authenticate, getProfiles } from "../../lensCalls";
 import { client } from "../../apollo-client";
 import { useAccount } from "wagmi";
-import { v4 as uuidv4 } from "uuid";
 
 export default function AuthenticateModal({ isOpen, onClose, variant }) {
-  const [lensHandle, setLensHandle] = useState("");
-  const [name, setName] = useState("");
-  const [bio, setBio] = useState("");
-  const [cid, setCid] = useState("");
   const [profiles, setProfiles] = useState([]);
   const { address } = useAccount();
   const toast = useToast();
@@ -71,7 +53,7 @@ export default function AuthenticateModal({ isOpen, onClose, variant }) {
         },
       } = authData;
       localStorage.setItem("lens_auth_token", accessToken);
-      profiles[0]?.handle && onClose();
+      onClose();
       toast({
         title: "Lens is authenticated!",
         position: "top",
@@ -92,38 +74,6 @@ export default function AuthenticateModal({ isOpen, onClose, variant }) {
     }
   }
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-
-    try {
-      const request = {
-        handle: lensHandle,
-      };
-      const response = await createProfile(request);
-      console.log("CREATED PROFILE!", response);
-      localStorage.setItem("lens_handle", `${lensHandle}.test`);
-      onClose();
-
-      toast({
-        title: "Lens handle created!",
-        position: "top",
-        variant: "left-accent",
-        status: "success",
-        isClosable: true,
-      });
-    } catch (error) {
-      console.log("ERROR", error);
-      onClose();
-      toast({
-        title: "Error creating Lens handle",
-        position: "top",
-        variant: "left-accent",
-        status: "error",
-        isClosable: true,
-      });
-    }
-  };
-
   useEffect(() => {
     fetchProfiles();
   }, [address]);
@@ -141,32 +91,11 @@ export default function AuthenticateModal({ isOpen, onClose, variant }) {
           </ModalHeader>
           <ModalCloseButton />
           <ModalBody py={6}>
-            {variant === "create-profile" ? (
-              <form onSubmit={handleSubmit}>
-                <Text mb="8px">Choose Lens Handle</Text>
-                <InputGroup>
-                  <InputLeftAddon children="@" />
-                  <Input
-                    placeholder="Enter Lens Handle"
-                    value={lensHandle}
-                    onChange={(e) => setLensHandle(e.target.value)}
-                  />
-                  <InputRightAddon children=".test" />
-                </InputGroup>
-
-                <Box my={4}>
-                  <button className="btn-primary w-full" type="submit">
-                    Create Profile
-                  </button>
-                </Box>
-              </form>
-            ) : (
-              <Center>
-                <button onClick={() => login()} className="btn-primary">
-                  Authenticate Lens
-                </button>
-              </Center>
-            )}
+            <Center>
+              <button onClick={() => login()} className="btn-primary">
+                Authenticate Lens
+              </button>
+            </Center>
           </ModalBody>
         </ModalContent>
       </Modal>

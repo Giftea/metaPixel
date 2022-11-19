@@ -37,6 +37,7 @@ export default function BasicUsage({ isOpen, onClose, followers, userName }) {
       });
     } catch (error) {
       onClose();
+
       toast({
         title: error.message,
         position: "top",
@@ -58,23 +59,19 @@ export default function BasicUsage({ isOpen, onClose, followers, userName }) {
           <ModalCloseButton />
           <ModalBody>
             {followers?.map((follower) => {
-              let url =
-                follower?.wallet?.defaultProfile?.picture?.original?.url;
+              let url = follower?.profile?.picture?.original?.url;
               let slice = url?.slice(url.lastIndexOf("/"), url?.length);
               let renderURL = `https://ipfs.io/ipfs/${slice}`;
               return (
                 <Flex
-                  key={follower?.wallet?.defaultProfile?.id}
+                  key={follower?.profile?.id}
                   alignItems={"center"}
                   my={3}
                   justifyContent="space-between"
                 >
                   <Flex alignItems={"center"}>
                     {" "}
-                    <Avatar
-                      name={follower?.wallet?.defaultProfile?.name}
-                      src={renderURL}
-                    />
+                    <Avatar name={follower?.profile?.name} src={renderURL} />
                     <Text
                       ml={4}
                       fontWeight="bold"
@@ -82,19 +79,15 @@ export default function BasicUsage({ isOpen, onClose, followers, userName }) {
                       textTransform="capitalize"
                       cursor={"pointer"}
                       onClick={() => {
-                        router.push(
-                          `/profile/${follower?.wallet?.defaultProfile?.handle}`
-                        );
+                        router.push(`/profile/${follower?.profile?.handle}`);
                         onClose();
                       }}
                     >
-                      {follower?.wallet?.defaultProfile?.name}
+                      {follower?.profile?.name}
                     </Text>
                   </Flex>
                   <button
-                    onClick={() =>
-                      followUser(follower?.wallet?.defaultProfile?.id)
-                    }
+                    onClick={() => followUser(follower?.profile?.id)}
                     className="btn-outline"
                   >
                     Follow
@@ -110,6 +103,6 @@ export default function BasicUsage({ isOpen, onClose, followers, userName }) {
 }
 
 /*
-follower?.wallet?.defaultProfile?.name
-
-*/
+  follower?.wallet?.defaultProfile?.name
+  
+  */

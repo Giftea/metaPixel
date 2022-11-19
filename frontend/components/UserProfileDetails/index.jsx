@@ -1,28 +1,41 @@
-import { Avatar, Box, Flex, Spacer, Stack, Text } from "@chakra-ui/react";
+import { Avatar, Box, Flex, Spacer, useToast, Text } from "@chakra-ui/react";
 import { EditIcon } from "@chakra-ui/icons";
-import { getProfiles, getFollowers } from "../../lensCalls";
+import {
+  getProfile,
+  getFollowers,
+  getFollowing,
+  createFollowTypedData,
+} from "../../lensCalls";
 import { useEffect, useState } from "react";
 import { useAccount } from "wagmi";
 import { useRouter } from "next/router";
-import FollowersModal from '../Modals/FollwersModal'
-import {useDisclosure,
-} from "@chakra-ui/react";
+import FollowersModal from "../Modals/FollwersModal";
+import FollowingModal from "../Modals/FollowingModal";
+import { useDisclosure } from "@chakra-ui/react";
 
 const Profile = () => {
-  const { isOpen, onOpen, onClose } = useDisclosure()
+  const { isOpen, onOpen, onClose } = useDisclosure();
+  const toast = useToast();
+  const {
+    isOpen: followingIsOpen,
+    onOpen: followingOnOpen,
+    onClose: followingOnClose,
+  } = useDisclosure();
   const router = useRouter();
+  const query = router?.query?.lenshandle;
   const { address } = useAccount();
   const [profiles, setProfiles] = useState([]);
   const [followers, setFollowers] = useState([]);
+  const [following, setFollowing] = useState([]);
   const [imgUrl, setImgUrl] = useState("");
 
   async function fetchProfiles() {
     try {
-      let response = await getProfiles({ ownedBy: [`${address}`], limit: 10 });
-      setProfiles(response?.data?.profiles?.items[0]);
-
+      let response = await getProfile({ handle: query });
+      setProfiles(response?.data?.profile);
+      console.log(response);
       if (response?.data) {
-        const url = profiles?.picture?.original?.url;
+        const url = await profiles?.picture?.original?.url;
         const slice = url?.slice(url.lastIndexOf("/"), url?.length);
         setImgUrl(`https://lens.infura-ipfs.io/ipfs${slice}`);
       }
@@ -36,15 +49,58 @@ const Profile = () => {
       let response = await getFollowers(profiles?.id);
 
       setFollowers(response?.data?.followers?.items);
-      console.log(followers)
-      onOpen()
+      onOpen();
     } catch (error) {
       console.log(error);
     }
   }
+
+  async function getMyFollowing() {
+    try {
+      console.log(profiles?.ownedBy);
+      let response = await getFollowing(profiles?.ownedBy);
+
+      console.log("following", response);
+      setFollowing(response?.data?.following?.items);
+      followingOnOpen();
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  async function followUser(id) {
+    try {
+      const response = await createFollowTypedData({
+        follow: [
+          {
+            profile: id,
+          },
+        ],
+      });
+
+      toast({
+        title: "Followed User!",
+        position: "top",
+        variant: "left-accent",
+        status: "success",
+        isClosable: true,
+      });
+
+      console.log(response);
+    } catch (error) {
+      toast({
+        title: error.message,
+        position: "top",
+        variant: "left-accent",
+        status: "error",
+        isClosable: true,
+      });
+    }
+  }
+
   useEffect(() => {
     fetchProfiles();
-  }, []);
+  }, [query]);
 
   return (
     <Box px={{ base: 6, md: 20 }} pt={10}>
@@ -76,13 +132,13 @@ const Profile = () => {
                 {" "}
                 <button
                   className="btn-outline"
-                  onClick={() => router.push("/profile/editProfile")}
+                  onClick={() => followUser(profiles?.id)}
                 >
                   <Text px={6}> Follow</Text>
                 </button>
                 <button
                   className="btn-primary"
-                  onClick={() => router.push("/profile/editProfile")}
+                  // onClick={() => router.push("/profile/editProfile")}
                   style={{ marginLeft: "15px" }}
                 >
                   Reward Creator
@@ -106,14 +162,18 @@ const Profile = () => {
               <Text color={"#625da0"} fontWeight="bold" mr={3}>
                 {profiles?.stats?.totalFollowers}
               </Text>
-              <Text cursor={'pointer'} onClick={() => getMyFollowers()}>Followers</Text>
+              <Text cursor={"pointer"} onClick={() => getMyFollowers()}>
+                Followers
+              </Text>
             </Flex>{" "}
             <Flex fontSize="3xl" mr={8}>
               {" "}
               <Text color={"#625da0"} fontWeight="bold" mr={3}>
                 {profiles?.stats?.totalFollowing}
               </Text>
-              <Text>Following</Text>
+              <Text cursor={"pointer"} onClick={() => getMyFollowing()}>
+                Following
+              </Text>
             </Flex>{" "}
             <Flex fontSize="3xl" mr={8}>
               {" "}
@@ -129,7 +189,18 @@ const Profile = () => {
         Your Photos
       </Text>
 
-      <FollowersModal isOpen={isOpen}  onClose ={onClose} followers={followers} userName={profiles?.name} />
+      <FollowersModal
+        isOpen={isOpen}
+        onClose={onClose}
+        followers={followers}
+        userName={profiles?.name}
+      />
+      <FollowingModal
+        isOpen={followingIsOpen}
+        onClose={followingOnClose}
+        followers={following}
+        userName={profiles?.name}
+      />
     </Box>
   );
 };

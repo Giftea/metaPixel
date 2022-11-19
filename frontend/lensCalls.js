@@ -1750,131 +1750,139 @@ query ($exploreProfilesRequest2: ExploreProfilesRequest!) {
 `;
 
 const FOLLOWING = `
-query ($followingRequest2: FollowingRequest!) {
-    exploreProfiles {
-      
-    }
-    following(request: $followingRequest2) {
-      
-    }
-  } {
-      items {
-        profile {
-          id
-          name
-          bio
-          attributes {
-              displayType
-              traitType
-              key
-              value
-          }
-          followNftAddress
-          metadata
-          isDefault
-          handle
-          picture {
-            ... on NftImage {
-              contractAddress
-              tokenId
-              uri
-              verified
-            }
-            ... on MediaSet {
-              original {
-                url
-                width
-                height
-                mimeType
+      query ($request: FollowingRequest!) {
+        following(request: $request){
+          items {
+            profile {
+              id
+              name
+              bio
+              attributes {
+                  displayType
+                  traitType
+                  key
+                  value
               }
-              medium {
-                url
-                width
-                height
-                mimeType
-              }
-              small {
-                url
-                width
-                height
-                mimeType
-              }
-            }
-          }
-          coverPicture {
-            ... on NftImage {
-              contractAddress
-              tokenId
-              uri
-              verified
-            }
-            ... on MediaSet {
-              original {
-                url
-                width
-                height
-                mimeType
-              }
-              small {
-                width
-                url
-                height
-                mimeType
-              }
-              medium {
-                url
-                width
-                height
-                mimeType
-              }
-            }
-          }
-          ownedBy
-          dispatcher {
-            address
-            canUseRelay
-          }
-          stats {
-            totalFollowers
-            totalFollowing
-            totalPosts
-            totalComments
-            totalMirrors
-            totalPublications
-            totalCollects
-          }
-          followModule {
-            ... on FeeFollowModuleSettings {
-              type
-              amount {
-                asset {
-                  name
-                  symbol
-                  decimals
-                  address
+              followNftAddress
+              metadata
+              isDefault
+              handle
+              picture {
+                ... on NftImage {
+                  contractAddress
+                  tokenId
+                  uri
+                  verified
                 }
-                value
+                ... on MediaSet {
+                  original {
+                    url
+                    width
+                    height
+                    mimeType
+                  }
+                  medium {
+                    url
+                    width
+                    height
+                    mimeType
+                  }
+                  small {
+                    url
+                    width
+                    height
+                    mimeType
+                  }
+                }
               }
-              recipient
+              coverPicture {
+                ... on NftImage {
+                  contractAddress
+                  tokenId
+                  uri
+                  verified
+                }
+                ... on MediaSet {
+                  original {
+                    url
+                    width
+                    height
+                    mimeType
+                  }
+                  small {
+                    width
+                    url
+                    height
+                    mimeType
+                  }
+                  medium {
+                    url
+                    width
+                    height
+                    mimeType
+                  }
+                }
+              }
+              ownedBy
+              dispatcher {
+                address
+                canUseRelay
+              }
+              stats {
+                totalFollowers
+                totalFollowing
+                totalPosts
+                totalComments
+                totalMirrors
+                totalPublications
+                totalCollects
+              }
+              followModule {
+                ... on FeeFollowModuleSettings {
+                  type
+                  amount {
+                    asset {
+                      name
+                      symbol
+                      decimals
+                      address
+                    }
+                    value
+                  }
+                  recipient
+                }
+                ... on ProfileFollowModuleSettings {
+                 type
+                }
+                ... on RevertFollowModuleSettings {
+                 type
+                }
+              }
             }
-            ... on ProfileFollowModuleSettings {
-             type
-            }
-            ... on RevertFollowModuleSettings {
-             type
-            }
+            totalAmountOfTimesFollowing
+          }
+          pageInfo {
+            prev
+            next
+            totalCount
           }
         }
-        totalAmountOfTimesFollowing
       }
-      pageInfo {
-        prev
-        next
-        totalCount
-      }
-    }
-  }
 `;
+
+export const getFollowing = async (address) => {
+  const response = await client.query({
+    query: gql(FOLLOWING),
+    variables: {
+      request: {
+        address,
+        limit: 10,
+      },
+    },
+  });
+
+  return response;
+};
 
 const PROFILE_SEARCH = `
 query ($request: SearchQueryRequest!) {
