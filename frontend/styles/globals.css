@@ -7,6 +7,10 @@ body {
   box-sizing: border-box;
 }
 
+body {
+  color: #0c0c0c;
+}
+
 .hero-section {
   background-image: url("../public/images/bg/bg.png");
   background-repeat: no-repeat;
@@ -27,6 +31,21 @@ body {
   padding: 10px 20px;
   border-radius: 50px;
   font-weight: bold;
+}
+
+.btn-outline {
+  border: 2px solid #625da0;
+  backdrop-filter: blur(2px);
+  color: #0c0c0c;
+  padding: 10px 25px;
+  border-radius: 50px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.w-full {
+  width: 100%;
 }
 /*  */
 .custom-image {

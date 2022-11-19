@@ -1,5 +1,5 @@
-import { gql } from '@apollo/client'
-import { client } from "./apollo-client"
+import { gql } from "@apollo/client";
+import { client } from "./apollo-client";
 
 export const challenge = gql`
   query Challenge($address: EthereumAddress!) {
@@ -7,22 +7,16 @@ export const challenge = gql`
       text
     }
   }
-`
+`;
 
 export const authenticate = gql`
-  mutation Authenticate(
-    $address: EthereumAddress!
-    $signature: Signature!
-  ) {
-    authenticate(request: {
-      address: $address,
-      signature: $signature
-    }) {
+  mutation Authenticate($address: EthereumAddress!, $signature: Signature!) {
+    authenticate(request: { address: $address, signature: $signature }) {
       accessToken
       refreshToken
     }
   }
-`
+`;
 const GET_PROFILES = `
   query($request: ProfileQueryRequest!) {
     profiles(request: $request) {
@@ -546,6 +540,43 @@ export const getPublications = async (id) => {
   return response;
 };
 
+const SET_METADATA = `
+mutation ($request: CreatePublicSetProfileMetadataURIRequest!){
+  createSetProfileMetadataTypedData(request: $request) {
+    id
+      expiresAt
+      typedData {
+        types {
+          SetProfileMetadataURIWithSig {
+            name
+            type
+          }
+        }
+        domain {
+          name
+          chainId
+          version
+          verifyingContract
+        }
+        value {
+          nonce
+          deadline
+          profileId
+          metadata
+        }
+      }
+  }
+}`
+
+export const setMetadata = (CreateSetProfileMetadataTypedData) => {
+  return client.mutate({
+    mutation: gql(SET_METADATA),
+    variables: {
+      request: CreateSetProfileMetadataTypedData,
+    },
+  });
+};
+
 const CREATE_PROFILE = `
   mutation($request: CreateProfileRequest!) { 
     createProfile(request: $request) {
@@ -568,7 +599,6 @@ export const createProfile = (createProfileRequest) => {
     },
   });
 };
-
 
 const GET_FOLLOWERS = `
   query($request: FollowersRequest!) {
@@ -839,7 +869,6 @@ mutation ($request: FollowRequest! ) {
 }
 `;
 
-
 export const createFollowTypedData = (createFollowTypedDataRequest) => {
   return client.mutate({
     mutation: gql(CREATE_FOLLOW_TYPED_DATA),
@@ -875,7 +904,7 @@ mutation CreateUnfollowTypedData ($request: UnfollowRequest! ) {
       }
     }
   }
-`
+`;
 
 const GET_TIMELINE = `
 query ($request: TimelineRequest!) {
@@ -1250,7 +1279,7 @@ export const getTimeline = async (timelineRequest) => {
   return response;
 };
 
-const EXPLORE_PUBLICATIONS =`
+const EXPLORE_PUBLICATIONS = `
 query ($explorePublicationsRequest2: ExplorePublicationRequest!) {
     explorePublications(request: $explorePublicationsRequest2) 
   
@@ -1621,9 +1650,9 @@ query ($explorePublicationsRequest2: ExplorePublicationRequest!) {
   }
   
   
-`
+`;
 
-const EXPLORE_PROFILES= `
+const EXPLORE_PROFILES = `
 query ($exploreProfilesRequest2: ExploreProfilesRequest!) {
     exploreProfiles(request: $exploreProfilesRequest2) {
       
@@ -1718,9 +1747,9 @@ query ($exploreProfilesRequest2: ExploreProfilesRequest!) {
       }
     }
   }
-`
+`;
 
-const FOLLOWING =`
+const FOLLOWING = `
 query ($followingRequest2: FollowingRequest!) {
     exploreProfiles {
       
@@ -1845,7 +1874,7 @@ query ($followingRequest2: FollowingRequest!) {
       }
     }
   }
-`
+`;
 
 const PROFILE_SEARCH = `
 query ($request: SearchQueryRequest!) {
@@ -1959,7 +1988,7 @@ followModule {
   }
 }
 }
-`
+`;
 
 export const DEFAULT_PROFILE = `
 query DefaultProfile($request: DefaultProfileRequest!) {
@@ -2045,8 +2074,7 @@ query DefaultProfile($request: DefaultProfileRequest!) {
     }
   }
 }
-`
-
+`;
 
 const GET_CHALLENGE = `
   query($request: ChallengeRequest!) {

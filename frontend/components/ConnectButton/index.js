@@ -1,6 +1,29 @@
-import { ConnectButton } from '@rainbow-me/rainbowkit';
+import { ConnectButton } from "@rainbow-me/rainbowkit";
+import { getProfiles } from "../../lensCalls";
+import AuthenticateModal from "../Modals/AuthenticateModals";
+import { useDisclosure } from "@chakra-ui/react";
+import { useEffect, useState } from "react";
+import { useAccount } from "wagmi";
 
 export const CustomConnectButton = () => {
+  const [profiles, setProfiles] = useState([]);
+  const { isOpen, onOpen, onClose } = useDisclosure();
+  const { address } = useAccount();
+
+  async function fetchProfiles(userAddress) {
+    try {
+      let response = await getProfiles({ ownedBy: [`${userAddress}`], limit: 10 });
+      console.log("fetchProfiles RESPONSE", response);
+      setProfiles(response.data.profiles.items);
+    } catch (error) {
+      console.log("fetchProfiles ERROR:", error);
+    }
+  }
+
+  useEffect(() => {
+    fetchProfiles(address);
+  }, [address]);
+
   return (
     <ConnectButton.Custom>
       {({
@@ -14,28 +37,31 @@ export const CustomConnectButton = () => {
       }) => {
         // Note: If your app doesn't use authentication, you
         // can remove all 'authenticationStatus' checks
-        const ready = mounted && authenticationStatus !== 'loading';
+        const ready = mounted && authenticationStatus !== "loading";
         const connected =
           ready &&
           account &&
           chain &&
-          (!authenticationStatus ||
-            authenticationStatus === 'authenticated');
+          (!authenticationStatus || authenticationStatus === "authenticated");
         return (
           <div
             {...(!ready && {
-              'aria-hidden': true,
-              'style': {
+              "aria-hidden": true,
+              style: {
                 opacity: 0,
-                pointerEvents: 'none',
-                userSelect: 'none',
+                pointerEvents: "none",
+                userSelect: "none",
               },
             })}
           >
             {(() => {
               if (!connected) {
                 return (
-                  <button className='btn-primary' onClick={openConnectModal} type="button">
+                  <button
+                    className="btn-primary"
+                    onClick={openConnectModal}
+                    type="button"
+                  >
                     Connect Wallet
                   </button>
                 );
@@ -48,40 +74,20 @@ export const CustomConnectButton = () => {
                 );
               }
               return (
-                <div style={{ display: 'flex', gap: 12 }}>
-                  <button
-                    onClick={openChainModal}
-                    style={{ display: 'flex', alignItems: 'center' }}
-                    type="button"
-                  >
-                    {chain.hasIcon && (
-                      <div
-                        style={{
-                          background: chain.iconBackground,
-                          width: 12,
-                          height: 12,
-                          borderRadius: 999,
-                          overflow: 'hidden',
-                          marginRight: 4,
-                        }}
-                      >
-                        {chain.iconUrl && (
-                          <img
-                            alt={chain.name ?? 'Chain icon'}
-                            src={chain.iconUrl}
-                            style={{ width: 12, height: 12 }}
-                          />
-                        )}
-                      </div>
-                    )}
-                    {chain.name}
-                  </button>
-                  <button onClick={openAccountModal} type="button">
-                    {account.displayName}
-                    {account.displayBalance
-                      ? ` (${account.displayBalance})`
-                      : ''}
-                  </button>
+                <div style={{ display: "flex", gap: 12 }}>
+                  {profiles.length > 0 ? (
+                    <button
+                      className="btn-outline"
+                      onClick={openAccountModal}
+                      type="button"
+                    >
+                      {account.displayName}
+                    {/* {profiles[0]?.handle} */}
+                    </button>
+                  ) : (
+                    <button onClick={()=> onOpen()} className="btn-primary">Create Lens Profile</button>
+                  )}
+                  <AuthenticateModal variant="create-profile" isOpen={isOpen} onClose={onClose} />
                 </div>
               );
             })()}
@@ -91,3 +97,13 @@ export const CustomConnectButton = () => {
     </ConnectButton.Custom>
   );
 };
+// {account.displayName}
+
+// 5778430
+
+/*
+{ 
+      profileId: "0x01", 
+      metadata: "ipfs://Qmeu6u6Ta5qeCf6mw3zVoe9pMus96cX6eZT6dnRQKDStBL" 
+  }
+*/

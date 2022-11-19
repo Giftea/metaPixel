@@ -6,7 +6,7 @@ const Layout = ({ children }) => {
     <div className="font-sans flex flex-col min-h-screen">
       <Navbar />
       <main className="flex-1">{children}</main>
-      <Footer />
+      {/* <Footer /> */}
     </div>
   );
 };
