@@ -7,14 +7,21 @@ import { useAccount } from "wagmi";
 import { useRouter } from "next/router";
 
 const Profile = () => {
-  const router = useRouter()
+  const router = useRouter();
   const { address } = useAccount();
   const [profiles, setProfiles] = useState([]);
+  const [imgUrl, setImgUrl] = useState("");
 
   async function fetchProfiles() {
     try {
       let response = await getProfiles({ ownedBy: [`${address}`], limit: 10 });
       setProfiles(response?.data?.profiles?.items[0]);
+
+      if (response?.data) {
+        const url = profiles?.picture?.original?.url;
+        const slice = url?.slice(url.lastIndexOf("/"), url?.length);
+        setImgUrl(`https://lens.infura-ipfs.io/ipfs${slice}`);
+      }
     } catch (error) {
       console.log("fetchProfiles ERROR:", error);
     }
@@ -26,47 +33,79 @@ const Profile = () => {
   return (
     <Box px={{ base: 6, md: 20 }} pt={10}>
       <Flex alignItems={"center"} pb={10}>
-        <Stack alignItems={"center"}>
+        <Box alignItems={"center"}>
           <Avatar
             height={"240px"}
             width="240px"
-            // border="1px solid #0F0F0F"
+            src={imgUrl}
+            name={profiles?.name}
           />
-          <Text textAlign="center" fontSize="3xl">
-            {profiles[0]?.handle}
-          </Text>
-          <button className="btn-outline" onClick={()=> router.push('/profile/editProfile')}>
-            <EditIcon mr={2} /> Edit Profile
-          </button>
-        </Stack>
+        </Box>
         <Spacer />
         <Box width={{ base: "auto", md: "70%" }}>
-          <Text fontSize="2xl">
-            Lorem ipsum dolor sit amet consectetur adipisicing elit. Quis,
-            natus. Cum tempora quod porro magni, fuga quo expedita ullam harum
-            laborum saepe, tempore quae. Molestias laborum soluta impedit omnis
-            ullam?
+          <Flex alignItems={'center'}>
+            {" "}
+            <Text textAlign="center" mr={6} fontSize="4xl">
+              {profiles?.name}
+            </Text>
+            {address === profiles?.ownedBy ? (
+              <button
+                className="btn-outline"
+                onClick={() => router.push("/profile/editProfile")}
+              >
+                <EditIcon mr={2} /> Edit Profile
+              </button>
+            ) : (
+              <>
+                {" "}
+                <button
+                  className="btn-outline"
+                  onClick={() => router.push("/profile/editProfile")}
+                >
+                  <Text px={6}> Follow</Text>
+                </button>
+                <button
+                  className="btn-primary"
+                  onClick={() => router.push("/profile/editProfile")}
+                  style={{ marginLeft: "15px" }}
+                >
+                  Reward Creator
+                </button>
+              </>
+            )}
+          </Flex>
+          <Text mt={6} fontSize="xl">
+            {profiles?.bio}
           </Text>
-          <Flex my={4} textAlign="center">
-            <Box fontSize="3xl" mr={8}>
+          <Flex mt={6} textAlign="center">
+            <Flex fontSize="3xl" mr={8}>
               {" "}
-              <Text color={"#625da0"}>
+              <Text color={"#625da0"} fontWeight="bold" mr={3}>
+                {profiles?.stats?.totalPosts}
+              </Text>
+              <Text>Posts</Text>
+            </Flex>
+            <Flex fontSize="3xl" mr={8}>
+              {" "}
+              <Text color={"#625da0"} fontWeight="bold" mr={3}>
                 {profiles?.stats?.totalFollowers}
               </Text>
               <Text>Followers</Text>
-            </Box>{" "}
-            <Box fontSize="3xl" mr={8}>
+            </Flex>{" "}
+            <Flex fontSize="3xl" mr={8}>
               {" "}
-              <Text color={"#625da0"}>
+              <Text color={"#625da0"} fontWeight="bold" mr={3}>
                 {profiles?.stats?.totalFollowing}
               </Text>
               <Text>Following</Text>
-            </Box>{" "}
-            <Box fontSize="3xl" mr={8}>
+            </Flex>{" "}
+            <Flex fontSize="3xl" mr={8}>
               {" "}
-              <Text color={"#625da0"}>{profiles?.stats?.totalPosts}</Text>
-              <Text>Posts</Text>
-            </Box>
+              <Text color={"#625da0"} fontWeight="bold" mr={3}>
+                {profiles?.stats?.totalPosts}
+              </Text>
+              <Text>Views</Text>
+            </Flex>
           </Flex>
         </Box>
       </Flex>
