@@ -1,45 +1,46 @@
-import React from "react";
-import { nanoid } from "nanoid";
 import {
-  Image,
-  Flex,
   Box,
+  Button,
+  Flex,
   IconButton,
-  Stack,
+  Image,
   Modal,
-  ModalOverlay,
-  ModalContent,
-  ModalHeader,
-  ModalFooter,
   ModalBody,
   ModalCloseButton,
+  ModalContent,
+  ModalFooter,
+  ModalHeader,
+  ModalOverlay,
+  Stack,
   useDisclosure,
-  Button,
-} from "@chakra-ui/react";
-import Masonry from "react-masonry-css";
-import { DownloadIcon } from "@chakra-ui/icons";
+} from '@chakra-ui/react'
+
+import { DownloadIcon } from '@chakra-ui/icons'
+import Masonry from 'react-masonry-css'
+import React from 'react'
+import { nanoid } from 'nanoid'
 
 const Images = ({ images }) => {
   const breakpointColumnsObj = {
     default: 3,
     1500: 3,
     800: 1,
-  };
+  }
 
-  const columnClassName = "my-masonry-grid_column";
+  const columnClassName = 'my-masonry-grid_column'
 
-  const gutterSpace = "30px";
+  const gutterSpace = '30px'
 
   const masonryStyles = {
     ml: `-${gutterSpace}`,
-  };
+  }
 
-  const selector = `& .${columnClassName}`;
+  const selector = `& .${columnClassName}`
 
   masonryStyles[selector] = {
     pl: gutterSpace,
-    backgroundClip: "padding-box",
-  };
+    backgroundClip: 'padding-box',
+  }
 
   return (
     <Flex
@@ -59,28 +60,28 @@ const Images = ({ images }) => {
         />
       ))}
     </Flex>
-  );
-};
+  )
+}
 
-export default Images;
+export default Images
 
 const CustomImage = ({ mb, src }) => {
-  const { isOpen, onOpen, onClose } = useDisclosure();
+  const { isOpen, onOpen, onClose } = useDisclosure()
 
   return (
     <>
       <Box onClick={onOpen} className="custom-image">
         <Image w="100%" mb={mb} src={src} alt="" />
         <div className="custom-image-overlay"></div>
-        <Stack direction={"row"} className="custom-image-more">
-          <IconButton border={"none"} icon={<DownloadIcon />} />{" "}
-          <IconButton border={"none"} icon={<>♡</>} />
+        <Stack direction={'row'} className="custom-image-more">
+          <IconButton border={'none'} icon={<DownloadIcon />} />{' '}
+          <IconButton border={'none'} icon={<>♡</>} />
         </Stack>
       </Box>
       <CustomImageModal isOpen={isOpen} onClose={onClose} />
     </>
-  );
-};
+  )
+}
 
 function CustomImageModal({ isOpen, onClose }) {
   return (
@@ -101,5 +102,5 @@ function CustomImageModal({ isOpen, onClose }) {
         </ModalContent>
       </Modal>
     </>
-  );
+  )
 }

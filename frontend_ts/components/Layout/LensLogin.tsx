@@ -1,26 +1,26 @@
-import { useEffect } from "react";
-import { CustomConnectButton } from "../ConnectButton";
-import { useAccount } from "wagmi";
-import AuthenticateModal from "../Modals/AuthenticateModals";
-import { useDisclosure } from "@chakra-ui/react";
+import AuthenticateModal from '../Modals/AuthenticateModals'
+import { ConnectButton } from '@rainbow-me/rainbowkit'
+import { useAccount } from 'wagmi'
+import { useDisclosure } from '@chakra-ui/react'
+import { useEffect } from 'react'
 
 export default function LensLogin() {
-  const { address, isConnected } = useAccount();
-  const { isOpen, onOpen, onClose } = useDisclosure();
+  const { address, isConnected } = useAccount()
+  const { isOpen, onOpen, onClose } = useDisclosure()
 
   useEffect(() => {
-    const userToken = localStorage.getItem("lens_auth_token");
-    const lensHandle = localStorage.getItem("lens_handle");
+    const userToken = localStorage.getItem('lens_auth_token')
+    const lensHandle = localStorage.getItem('lens_handle')
 
     if (address && isConnected && !userToken) {
-      onOpen();
+      onOpen()
     }
-  }, [address]);
+  }, [address])
 
   return (
     <>
-      <CustomConnectButton />
+      <ConnectButton />
       <AuthenticateModal isOpen={isOpen} onClose={onClose} />
     </>
-  );
+  )
 }
