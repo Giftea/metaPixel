@@ -1,7 +1,5 @@
 import { useState, useRef } from 'react'
 
-import { Box } from '@chakra-ui/react'
-
 function DragDropFiles() {
   const [files, setFiles] = useState(null)
   const inputRef = useRef(null)
@@ -20,7 +18,7 @@ function DragDropFiles() {
       <div className="uploads">
         <ul>
           {Array.from(files).map((file, idx) => (
-            <li key={idx}>{file.name}</li>
+            <li key={idx}>{file['name']}</li>
           ))}
         </ul>
       </div>
