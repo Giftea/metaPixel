@@ -1,9 +1,10 @@
-import { useState } from 'react'
+import { useState, useRef } from 'react'
+
 import { Box } from '@chakra-ui/react'
 
 function DragDropFiles() {
   const [files, setFiles] = useState(null)
-  const inputRef = useRef()
+  const inputRef = useRef(null)
 
   const handleDragOver = (event) => {
     event.preventDefault()
@@ -49,6 +50,3 @@ function DragDropFiles() {
   )
 }
 export default DragDropFiles
-function useRef() {
-  throw new Error('Function not implemented.')
-}
