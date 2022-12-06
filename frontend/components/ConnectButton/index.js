@@ -12,7 +12,10 @@ export const CustomConnectButton = () => {
 
   async function fetchProfiles(userAddress) {
     try {
-      let response = await getProfiles({ ownedBy: [`${userAddress}`], limit: 10 });
+      let response = await getProfiles({
+        ownedBy: [`${userAddress}`],
+        limit: 10,
+      });
       console.log("fetchProfiles RESPONSE", response);
       setProfiles(response.data.profiles.items);
     } catch (error) {
@@ -82,12 +85,18 @@ export const CustomConnectButton = () => {
                       type="button"
                     >
                       {account.displayName}
-                    {/* {profiles[0]?.handle} */}
+                      {/* {profiles[0]?.handle} */}
                     </button>
                   ) : (
-                    <button onClick={()=> onOpen()} className="btn-primary">Create Lens Profile</button>
+                    <button onClick={() => onOpen()} className="btn-primary">
+                      Create Lens Profile
+                    </button>
                   )}
-                  <AuthenticateModal variant="create-profile" isOpen={isOpen} onClose={onClose} />
+                  <AuthenticateModal
+                    variant="create-profile"
+                    isOpen={isOpen}
+                    onClose={onClose}
+                  />
                 </div>
               );
             })()}

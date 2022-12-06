@@ -25,11 +25,21 @@ function UploadPhoto() {
 
   return (
     <>
-      <Button onClick={onOpen}>Upload Photo</Button>
+      <Button
+        borderRadius={'50px'}
+        backgroundColor={'#625da0'}
+        backdropBlur={'2px'}
+        textColor="white"
+        fontWeight={'bold'}
+        padding={'10px 20px'}
+        onClick={onOpen}
+      >
+        Upload Photo
+      </Button>
 
       <Modal blockScrollOnMount={true} isOpen={isOpen} onClose={onClose}>
         <ModalOverlay />
-        <ModalContent>
+        <ModalContent alignItems={'center'}>
           <ModalHeader>Upload a Photo</ModalHeader>
           <ModalCloseButton />
           <ModalBody>
@@ -75,10 +85,16 @@ function UploadPhoto() {
           </ModalBody>
 
           <ModalFooter>
-            <Button mr={3} onClick={onClose}>
-              Close
-            </Button>
-            <Button className="btn-primary" variant="ghost">
+            <Button
+              width={'400px'}
+              borderRadius={'50px'}
+              backgroundColor={'#625da0'}
+              backdropBlur={'2px'}
+              textColor="white"
+              fontWeight={'bold'}
+              // padding={'10px 20px'}
+              onClick={onClose}
+            >
               Upload
             </Button>
           </ModalFooter>

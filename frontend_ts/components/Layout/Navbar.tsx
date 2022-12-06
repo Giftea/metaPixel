@@ -58,17 +58,8 @@ const Navbar = () => {
         alignItems={'center'}
         direction={'row'}
       >
-        {address && (
-          <button
-            onClick={() => {
-              setShowModal(!showModal)
-            }}
-            className="btn-primary"
-          >
-            Upload Photo
-          </button>
-        )}
-        {showModal && <UploadPhoto />}
+        {address && <UploadPhoto />}
+
         <LensLogin />
         {profiles && (
           <Avatar
