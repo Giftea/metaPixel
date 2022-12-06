@@ -81,3 +81,23 @@ body {
   bottom: 5%;
   opacity: 1;
 }
+
+.dropzone {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  border: dashed;
+  border-radius: 5px;
+  background-color: #f3f3f3;
+}
+
+button {
+  font-weight: 500;
+  color: #625da0;
+  font-family: 'Poppins';
+  font-style: normal;
+  font-size: 20px;
+  line-height: 30px;
+  text-decoration: underline;
+}

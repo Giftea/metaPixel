@@ -81,3 +81,11 @@ body {
   bottom: 5%;
   opacity: 1;
 }
+
+.dropzone {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  border: dashed;
+}
