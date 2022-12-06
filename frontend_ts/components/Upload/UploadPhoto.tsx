@@ -45,13 +45,13 @@ function UploadPhoto() {
           <ModalBody>
             <Stack>
               {/* added stack */}
-              <FormLabel>Photo title</FormLabel>
+              <FormLabel color={'gray'}>Photo title</FormLabel>
               <Input />
-              <FormLabel>Photo description (optional)</FormLabel>
+              <FormLabel color={'gray'}>Photo description (optional)</FormLabel>
               <Input />
-              <FormLabel>Tags</FormLabel>
+              <FormLabel color={'gray'}>Tags</FormLabel>
               <Input />
-              <Text>
+              <Text color={'gray'}>
                 <Icon viewBox="0 0 20 20" color="lightgray">
                   <path
                     fill="white"
@@ -87,7 +87,6 @@ function UploadPhoto() {
           <ModalFooter>
             <Button
               width={'400px'}
-              borderRadius={'50px'}
               backgroundColor={'#625da0'}
               backdropBlur={'2px'}
               textColor="white"
