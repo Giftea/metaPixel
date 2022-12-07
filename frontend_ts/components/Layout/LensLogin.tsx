@@ -20,7 +20,7 @@ export default function LensLogin() {
   return (
     <>
       <ConnectButton />
-      <AuthenticateModal isOpen={isOpen} onClose={onClose} />
+      {/* <AuthenticateModal isOpen={isOpen} onClose={onClose} /> */}
     </>
   )
 }

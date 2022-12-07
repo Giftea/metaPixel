@@ -6,6 +6,7 @@ import { getProfiles } from '../../lensCalls'
 import { useAccount } from 'wagmi'
 import { useEffect, useState } from 'react'
 import UploadPhoto from '../Upload/UploadPhoto'
+import { useIsMounted } from '../../hooks/useIsMounted'
 
 const Navbar = () => {
   const router = useRouter()
@@ -13,6 +14,7 @@ const Navbar = () => {
   const [profiles, setProfiles] = useState()
   const [imgUrl, setImgUrl] = useState('')
   const [showModal, setShowModal] = useState(false)
+  const mounted = useIsMounted()
 
   async function fetchProfiles(useraddress) {
     try {
@@ -58,7 +60,7 @@ const Navbar = () => {
         alignItems={'center'}
         direction={'row'}
       >
-        {address && <UploadPhoto />}
+        {mounted ? address && <UploadPhoto /> : null}
 
         <LensLogin />
         {profiles && (

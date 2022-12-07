@@ -7,7 +7,7 @@ import { WagmiConfig, chain, configureChains, createClient } from 'wagmi'
 import type { AppProps } from 'next/app'
 import { ChakraProvider } from '@chakra-ui/react'
 import { jsonRpcProvider } from 'wagmi/providers/jsonRpc'
-import { midnightTheme } from '@rainbow-me/rainbowkit'
+import { darkTheme } from '@rainbow-me/rainbowkit'
 
 // import { AuthProvider } from "../context/AuthProvider";
 
@@ -41,7 +41,10 @@ function MyApp({ Component, pageProps }: AppProps) {
       <RainbowKitProvider
         coolMode
         chains={chains}
-        theme={midnightTheme({ accentColor: '#9932cc' })}
+        theme={darkTheme({
+          accentColor: '#625DA0',
+          borderRadius: 'large',
+        })}
       >
         <ChakraProvider>
           <Component {...pageProps} />
