@@ -1,70 +1,69 @@
-import { useEffect, useState } from "react";
-import { useAccount } from "wagmi";
-import { useRouter } from "next/router";
-import { createProfile, getProfiles } from "../../lensCalls";
-import { RadioGroup } from "@headlessui/react";
-import Layout from "./Layout";
-import { classNames } from "../../utils/helpers";
-import Loading from "../Loading";
-import useAuth from "../../hooks/useAuth";
-import { getDefaultProfile } from "../../utils/getDefaultProfile";
+import { useEffect, useState } from 'react'
+import { useAccount } from 'wagmi'
+import { useRouter } from 'next/router'
+import { createProfile, getProfiles } from '../../lensCalls'
+import { RadioGroup } from '@chakra-ui/react'
+import Layout from './Layout'
+// import { classNames } from '../../utils/helpers'
+import useAuth from '../../hooks/useAuth'
+import { getDefaultProfile } from '../../utils/getDefaultProfile'
 
 export default function CreateProfile() {
-  const router = useRouter();
+  const router = useRouter()
 
-  const { address } = useAccount();
-  const { setAuth } = useAuth();
+  const { address } = useAccount()
+  const { setAuth } = useAuth()
 
-  const [loading, setLoading] = useState(true);
-  const [lensHandle, setLensHandle] = useState("");
-  const [profiles, setProfiles] = useState([]);
-  const [selected, setSelected] = useState("");
+  const [loading, setLoading] = useState(true)
+  const [lensHandle, setLensHandle] = useState('')
+  const [profiles, setProfiles] = useState([])
+  const [selected, setSelected] = useState('')
 
   useEffect(() => {
     console.log(address)
     if (address) {
-      fetchProfiles();
+      fetchProfiles()
     } else {
-      setLoading(false);
+      setLoading(false)
     }
-  }, []);
+  }, [])
 
   async function fetchProfiles() {
     try {
-      let response = await getProfiles({ownedBy: [`${address}`], limit: 10});
-      console.log("fetchProfiles RESPONSE", response);
-      setProfiles(response.data.profiles.items);
+      let response = await getProfiles({ ownedBy: [`${address}`], limit: 10 })
+      console.log('fetchProfiles RESPONSE', response)
+      setProfiles(response.data.profiles.items)
       if (profiles.length > 0) {
-        setSelected(profiles[0].handle);
+        setSelected(profiles[0].handle)
       }
-      setLoading(false);
+      setLoading(false)
     } catch (error) {
-      console.log("fetchProfiles ERROR:", error);
-      setLoading(false);
+      console.log('fetchProfiles ERROR:', error)
+      setLoading(false)
     }
   }
 
   const handleContinue = (e) => {
-    e.preventDefault();
-    localStorage.setItem("lens_handle", selected);
-    setAuth({ lens_handle: selected });
-    router.push(`/dashboard/${selected}`);
-  };
+    e.preventDefault()
+    localStorage.setItem('lens_handle', selected)
+    setAuth({ lens_handle: selected })
+    router.push(`/dashboard/${selected}`)
+  }
 
   const handleSubmit = async (e) => {
-    e.preventDefault();
+    e.preventDefault()
     try {
       const request = {
         handle: lensHandle,
-      };
-      const response = await createProfile(request);
-      console.log("CREATED PROFILE!", response);
-      localStorage.setItem("lens_handle", `${lensHandle}.test`);
-      setAuth({ lens_handle: selected });
+      }
+      const response = await createProfile(request)
+      console.log('CREATED PROFILE!', response)
+      localStorage.setItem('lens_handle', `${lensHandle}.test`)
+      setAuth({ lens_handle: selected })
     } catch (error) {
-      console.log("ERROR", error);
+      console.log('ERROR', error)
     }
-  };
+  }
 
   return (
     <Layout>
@@ -86,8 +85,8 @@ export default function CreateProfile() {
                     <div className="mx-auto w-full sm:max-w-md mt-5 md:mt-8">
                       <RadioGroup value={selected} onChange={setSelected}>
                         <RadioGroup.Label className="sr-only">
-                          {" "}
-                          Profiles{" "}
+                          {' '}
+                          Profiles{' '}
                         </RadioGroup.Label>
                         <div className="space-y-4">
                           {profiles.map((profile) => (
@@ -97,12 +96,12 @@ export default function CreateProfile() {
                               className={({ checked, active }) =>
                                 classNames(
                                   checked
-                                    ? "border-transparent"
-                                    : "border-stone-300",
+                                    ? 'border-transparent'
+                                    : 'border-stone-300',
                                   active
-                                    ? "border-emerald-600 ring-2 ring-emerald-600"
-                                    : "",
-                                  "relative block cursor-pointer rounded-lg border bg-white px-6 py-4 shadow-sm focus:outline-none sm:flex sm:justify-between"
+                                    ? 'border-emerald-600 ring-2 ring-emerald-600'
+                                    : '',
+                                  'relative block cursor-pointer rounded-lg border bg-white px-6 py-4 shadow-sm focus:outline-none sm:flex sm:justify-between'
                                 )
                               }
                             >
@@ -122,15 +121,15 @@ export default function CreateProfile() {
                                       >
                                         <span className="block sm:inline">
                                           {profile.stats.totalPosts} Posts
-                                        </span>{" "}
+                                        </span>{' '}
                                         <span
                                           className="hidden sm:mx-1 sm:inline"
                                           aria-hidden="true"
                                         >
                                           &middot;
-                                        </span>{" "}
+                                        </span>{' '}
                                         <span className="block sm:inline">
-                                          {profile.stats.totalFollowers}{" "}
+                                          {profile.stats.totalFollowers}{' '}
                                           Followers
                                         </span>
                                         <span
@@ -138,9 +137,9 @@ export default function CreateProfile() {
                                           aria-hidden="true"
                                         >
                                           &middot;
-                                        </span>{" "}
+                                        </span>{' '}
                                         <span className="block sm:inline">
-                                          {profile.stats.totalFollowing}{" "}
+                                          {profile.stats.totalFollowing}{' '}
                                           Following
                                         </span>
                                       </RadioGroup.Description>
@@ -149,11 +148,11 @@ export default function CreateProfile() {
 
                                   <span
                                     className={classNames(
-                                      active ? "border" : "border-2",
+                                      active ? 'border' : 'border-2',
                                       checked
-                                        ? "border-emerald-600"
-                                        : "border-transparent",
-                                      "pointer-events-none absolute -inset-px rounded-lg"
+                                        ? 'border-emerald-600'
+                                        : 'border-transparent',
+                                      'pointer-events-none absolute -inset-px rounded-lg'
                                     )}
                                     aria-hidden="true"
                                   />
@@ -176,21 +175,13 @@ export default function CreateProfile() {
                   </>
                 ) : (
                   <>
-                    <h1>
-                      Create your Lens profile
-                    </h1>
-                    <div >
-                      <form  onSubmit={handleSubmit}>
+                    <h1>Create your Lens profile</h1>
+                    <div>
+                      <form onSubmit={handleSubmit}>
                         <div>
-                          <label
-                            htmlFor="username"
-                          >
-                            Your handle
-                          </label>
+                          <label htmlFor="username">Your handle</label>
                           <div>
-                            <span>
-                              @
-                            </span>
+                            <span>@</span>
                             <input
                               type="text"
                               name="username"
@@ -202,11 +193,7 @@ export default function CreateProfile() {
                           </div>
                         </div>
                         <div>
-                          <button
-                            type="submit"
-                          >
-                            Create Lens profile
-                          </button>
+                          <button type="submit">Create Lens profile</button>
                         </div>
                       </form>
                     </div>
@@ -219,7 +206,6 @@ export default function CreateProfile() {
           </>
         )}
       </div>
-     </Layout>
-  );
+    </Layout>
+  )
 }
-

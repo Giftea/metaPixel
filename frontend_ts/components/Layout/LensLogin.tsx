@@ -1,8 +1,8 @@
-import AuthenticateModal from '../Modals/AuthenticateModals'
-import { ConnectButton } from '@rainbow-me/rainbowkit'
 import { useAccount } from 'wagmi'
 import { useDisclosure } from '@chakra-ui/react'
 import { useEffect } from 'react'
+import { CustomConnectButton } from '../ConnectButton'
+import AuthenticateModal from '../Modals/AuthenticateModals'
 
 export default function LensLogin() {
   const { address, isConnected } = useAccount()
@@ -19,7 +19,7 @@ export default function LensLogin() {
 
   return (
     <>
-      <ConnectButton />
+      <CustomConnectButton />
       {/* <AuthenticateModal isOpen={isOpen} onClose={onClose} /> */}
     </>
   )
