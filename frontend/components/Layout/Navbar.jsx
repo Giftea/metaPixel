@@ -1,12 +1,14 @@
-import { Stack, Avatar } from "@chakra-ui/react";
+import { Stack, Avatar, useDisclosure } from "@chakra-ui/react";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import LensLogin from "./LensLogin";
 import { getProfiles } from "../../lensCalls";
 import { useAccount } from "wagmi";
 import { useEffect, useState } from "react";
+import UploadImage from "../Modals/UploadImage";
 
 const Navbar = () => {
+  const { isOpen, onOpen, onClose } = useDisclosure();
   const router = useRouter();
   const { address } = useAccount();
   const [profiles, setProfiles] = useState();
@@ -56,7 +58,11 @@ const Navbar = () => {
         alignItems={"center"}
         direction={"row"}
       >
-        {address && <button className="btn-primary">Upload Photo</button>}
+        {address && (
+          <button className="btn-primary" onClick={() => onOpen()}>
+            Upload Photo
+          </button>
+        )}
         <LensLogin />
         {profiles && (
           <Avatar
@@ -68,6 +74,7 @@ const Navbar = () => {
           />
         )}
       </Stack>
+      <UploadImage isOpen={isOpen} onClose={onClose} />
     </Stack>
   );
 };

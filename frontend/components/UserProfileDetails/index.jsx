@@ -5,6 +5,7 @@ import {
   getFollowers,
   getFollowing,
   createFollowTypedData,
+  getPublications,
 } from "../../lensCalls";
 import { useEffect, useState } from "react";
 import { useAccount } from "wagmi";
@@ -38,9 +39,19 @@ const Profile = () => {
         const url = await profiles?.picture?.original?.url;
         const slice = url?.slice(url.lastIndexOf("/"), url?.length);
         setImgUrl(`https://lens.infura-ipfs.io/ipfs${slice}`);
+       await getUserPhotos(profiles?.id)
       }
     } catch (error) {
       console.log("fetchProfiles ERROR:", error);
+    }
+  }
+
+  async function getUserPhotos(id) {
+    try {
+      let response = await getPublications(id);
+      console.log(response);
+    } catch (error) {
+      console.log(error);
     }
   }
 

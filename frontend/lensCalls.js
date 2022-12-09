@@ -566,7 +566,7 @@ mutation ($request: CreatePublicSetProfileMetadataURIRequest!){
         }
       }
   }
-}`
+}`;
 
 export const setMetadata = (CreateSetProfileMetadataTypedData) => {
   return client.mutate({
