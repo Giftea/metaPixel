@@ -22,10 +22,11 @@ const Navbar = () => {
         ownedBy: [`${useraddress}`],
         limit: 10,
       })
-      setProfiles(response?.data?.profiles?.items[0])
+      let prof = response?.data?.profiles?.items[0]
+      setProfiles(prof)
 
       if (response?.data) {
-        const url = profiles?.picture?.original?.url
+        const url = prof?.picture?.original?.url
         const slice = url?.slice(url.lastIndexOf('/'), url?.length)
         setImgUrl(`https://lens.infura-ipfs.io/ipfs${slice}`)
       }

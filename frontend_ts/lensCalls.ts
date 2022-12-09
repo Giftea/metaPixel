@@ -1,5 +1,6 @@
-import { apolloClient as client } from './src/apollo-client'
+import { apolloClient, apolloClient as client } from './src/apollo-client'
 import { gql } from '@apollo/client'
+import { ProfileQueryRequest } from './src/graphql/generated'
 
 export const challenge = gql`
   query Challenge($address: EthereumAddress!) {
@@ -109,7 +110,8 @@ const GET_PROFILES = `
   }
 `
 
-export const getProfiles = async (request) => {
+export const getProfiles = async (request: ProfileQueryRequest) => {
+  console.log('REQUEST:', request)
   const response = await client.query({
     query: gql(GET_PROFILES),
     variables: {

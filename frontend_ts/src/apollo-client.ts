@@ -23,7 +23,7 @@ const defaultOptions: DefaultOptions = {
 }
 
 const httpLink = new HttpLink({
-  uri: process.env.LENS_API,
+  uri: 'https://api-mumbai.lens.dev',
   fetch,
 })
 
