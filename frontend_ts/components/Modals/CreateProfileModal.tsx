@@ -87,7 +87,7 @@ const UploadImage = ({ isOpen, onClose }) => {
     setLoading(false)
     onClose() // close modal
     toast({
-      title: 'Image Successfully Uploaded!',
+      title: 'Profile created',
       position: 'top',
       variant: 'left-accent',
       status: 'success',
