@@ -72,9 +72,9 @@ const UploadImage = ({ isOpen, onClose }) => {
   async function handleOnChange() {
     const reader = new FileReader() // create new reader to read image file as a daat URL
 
-    // reader.onload = function (onLoadEvent) {
-    //   setImg(onLoadEvent.target.result) // save base64 encoded version of image
-    // }
+    reader.onload = function (onLoadEvent) {
+      setImg(onLoadEvent.target.result) // save base64 encoded version of image
+    }
 
     reader.readAsDataURL(acceptedFiles[0])
     return img
