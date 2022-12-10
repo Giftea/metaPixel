@@ -16,6 +16,7 @@ import {
   Spinner,
 } from '@chakra-ui/react'
 import { useDropzone } from 'react-dropzone'
+import UploadModalIcon from '../Icons/UploadModalIcon'
 
 const baseStyle = {
   flex: 1,
@@ -46,6 +47,7 @@ const UploadImage = ({ isOpen, onClose }) => {
   const [loading, setLoading] = useState(false)
   const [title, setTitle] = useState('')
   const [desc, setdesc] = useState('')
+  const [tags, settags] = useState('')
   const [img, setImg] = useState('')
 
   const {
@@ -124,6 +126,10 @@ const UploadImage = ({ isOpen, onClose }) => {
               <Text color={'#999999'}>Photo Description</Text>
               <Input value={desc} onChange={(e) => setdesc(e.target.value)} />
             </Box>
+            <Box my={3}>
+              <Text color={'#999999'}>Tags</Text>
+              <Input value={tags} onChange={(e) => settags(e.target.value)} />
+            </Box>
             <Flex my={3}>
               <Checkbox />{' '}
               <Text ml={3} fontSize="12px" color={'#666'}>
@@ -140,13 +146,14 @@ const UploadImage = ({ isOpen, onClose }) => {
               borderRadius={10}
               cursor="pointer"
             >
-              {/* <div {...getRootProps({ style })}> */}
-              <div>
+              <div {...getRootProps({ style })}>
                 <input {...getInputProps()} />
-                <Box mb={2}>{/* <UploadModalIcon /> */}</Box>
+                <Box mb={2}>
+                  <UploadModalIcon />
+                </Box>
 
                 <p>Drag and drop your files here</p>
-                {/* <Text>{acceptedFiles[0]?.path}</Text> */}
+                <Text>{acceptedFiles[0]?.path}</Text>
               </div>
             </Box>
             <button className="btn-primary w-full">

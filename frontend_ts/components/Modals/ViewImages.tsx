@@ -25,7 +25,7 @@ import {
 } from 'react-share'
 import { saveAs } from 'file-saver'
 
-function CustomImageModal({ isOpen, onClose, imageInfo }) {
+function ViewImages({ isOpen, onClose, imageInfo }) {
   const [likes, setlikes] = useState(0)
   function like() {
     setTimeout(() => {
@@ -118,4 +118,4 @@ function CustomImageModal({ isOpen, onClose, imageInfo }) {
   )
 }
 
-export default CustomImageModal
+export default ViewImages
