@@ -4,18 +4,12 @@ import {
   Flex,
   IconButton,
   Image,
-  Modal,
-  ModalBody,
-  ModalCloseButton,
-  ModalContent,
-  ModalFooter,
-  ModalHeader,
-  ModalOverlay,
   Stack,
   useDisclosure,
 } from '@chakra-ui/react'
 
 import { DownloadIcon } from '@chakra-ui/icons'
+import ViewImages from '../Modals/ViewImages'
 import Masonry from 'react-masonry-css'
 import React from 'react'
 import { nanoid } from 'nanoid'
@@ -50,13 +44,14 @@ const Images = ({ images }) => {
       sx={masonryStyles}
       mt="2rem"
     >
-      {images.map((image) => (
+      {images?.map((image) => (
         <CustomImage
           w="100%"
           key={nanoid()}
           mb={gutterSpace}
           src={image}
           alt=""
+          imageInfo={image}
         />
       ))}
     </Flex>
@@ -65,42 +60,26 @@ const Images = ({ images }) => {
 
 export default Images
 
+// const CustomImage = ({ mb, imageInfo }) => {
 const CustomImage = ({ mb, src }) => {
   const { isOpen, onOpen, onClose } = useDisclosure()
 
   return (
     <>
       <Box onClick={onOpen} className="custom-image">
+        {/* <Image w="100%" mb={mb} src={imageInfo?.url} alt="" /> */}
         <Image w="100%" mb={mb} src={src} alt="" />
         <div className="custom-image-overlay"></div>
         <Stack direction={'row'} className="custom-image-more">
-          <IconButton border={'none'} icon={<DownloadIcon />} />{' '}
-          <IconButton border={'none'} icon={<>♡</>} />
+          <IconButton
+            aria-label="Download"
+            border={'none'}
+            icon={<DownloadIcon />}
+          />{' '}
+          <IconButton aria-label="Like" border={'none'} icon={<>♡</>} />
         </Stack>
       </Box>
-      <CustomImageModal isOpen={isOpen} onClose={onClose} />
-    </>
-  )
-}
-
-function CustomImageModal({ isOpen, onClose }) {
-  return (
-    <>
-      <Modal size="6xl" isOpen={isOpen} onClose={onClose}>
-        <ModalOverlay />
-        <ModalContent>
-          <ModalHeader>Modal Title</ModalHeader>
-          <ModalCloseButton />
-          <ModalBody></ModalBody>
-
-          <ModalFooter>
-            <Button colorScheme="blue" mr={3} onClick={onClose}>
-              Close
-            </Button>
-            <Button variant="ghost">Secondary Action</Button>
-          </ModalFooter>
-        </ModalContent>
-      </Modal>
+      <ViewImages imageInfo={'images'} isOpen={isOpen} onClose={onClose} />
     </>
   )
 }

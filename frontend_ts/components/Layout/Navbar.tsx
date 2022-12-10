@@ -1,14 +1,16 @@
-import { Stack, Avatar } from '@chakra-ui/react'
+import { Stack, Avatar, useDisclosure } from '@chakra-ui/react'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
 import LensLogin from './LensLogin'
 import { getProfiles } from '../../lensCalls'
 import { useAccount } from 'wagmi'
 import { useEffect, useState } from 'react'
-import UploadPhoto from '../Upload/UploadPhoto'
 import { useIsMounted } from '../../hooks/useIsMounted'
+import UploadImage from '../Modals/UploadImage'
+import Loading from '../Loading'
 
 const Navbar = () => {
+  const { isOpen, onOpen, onClose } = useDisclosure()
   const router = useRouter()
   const { address } = useAccount()
   const [profiles, setProfiles] = useState()
@@ -39,6 +41,10 @@ const Navbar = () => {
     fetchProfiles(address)
   }, [address])
 
+  if (!mounted) {
+    return <Loading />
+  }
+
   return (
     <Stack
       direction={'row'}
@@ -61,7 +67,12 @@ const Navbar = () => {
         alignItems={'center'}
         direction={'row'}
       >
-        {mounted ? address && <UploadPhoto /> : null}
+        {/* {mounted ? address && <UploadImage /> : null} */}
+        {address && (
+          <button className="btn-primary" onClick={() => onOpen()}>
+            Upload Photo
+          </button>
+        )}
 
         <LensLogin />
         {profiles && (
@@ -74,6 +85,7 @@ const Navbar = () => {
           />
         )}
       </Stack>
+      <UploadImage isOpen={isOpen} onClose={onClose} />
     </Stack>
   )
 }
