@@ -86,7 +86,7 @@ export default function AuthenticateModal({ isOpen, onClose, variant }) {
           <ModalHeader>
             <Center>
               <Heading as="h2" size="xl">
-                Welcome to Pixeed!
+                Welcome to pixeed!
               </Heading>{' '}
             </Center>
           </ModalHeader>
