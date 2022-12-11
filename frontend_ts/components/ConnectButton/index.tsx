@@ -93,7 +93,7 @@ export const CustomConnectButton = () => {
                     </button>
                   )}
                   <AuthenticateModal
-                    variant="create-profile"
+                    variant
                     isOpen={isOpen}
                     onClose={onClose}
                   />

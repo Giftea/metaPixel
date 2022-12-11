@@ -8,6 +8,7 @@ import { useEffect, useState } from 'react'
 import { useIsMounted } from '../../hooks/useIsMounted'
 import UploadImage from '../Modals/UploadImage'
 import Loading from '../Loading'
+import { profile } from 'console'
 
 const Navbar = () => {
   const { isOpen, onOpen, onClose } = useDisclosure()
@@ -68,7 +69,7 @@ const Navbar = () => {
         direction={'row'}
       >
         {/* {mounted ? address && <UploadImage /> : null} */}
-        {address && (
+        {profiles && (
           <button className="btn-primary" onClick={() => onOpen()}>
             Upload Photo
           </button>

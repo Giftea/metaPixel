@@ -54,4 +54,4 @@ const editProfile = () => {
   )
 }
 
-export default EditProfile
+export default editProfile
