@@ -4,7 +4,6 @@ import AuthenticateModal from '../Modals/AuthenticateModals'
 import { useDisclosure } from '@chakra-ui/react'
 import { useEffect, useState } from 'react'
 import { useAccount } from 'wagmi'
-import CreateProfileModal from '../Modals/CreateProfileModal'
 
 export const CustomConnectButton = () => {
   const [profiles, setProfiles] = useState([])
@@ -93,7 +92,11 @@ export const CustomConnectButton = () => {
                       Create Lens Profile
                     </button>
                   )}
-                  <CreateProfileModal isOpen={isOpen} onClose={onClose} />
+                  <AuthenticateModal
+                    variant
+                    isOpen={isOpen}
+                    onClose={onClose}
+                  />
                 </div>
               )
             })()}

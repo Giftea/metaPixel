@@ -16,6 +16,8 @@ import { apolloClient as client } from '../../src/apollo-client'
 import { ethers } from 'ethers'
 import { useAccount } from 'wagmi'
 
+import CreateProfileModal from './CreateProfileModal'
+
 export default function AuthenticateModal({ isOpen, onClose, variant }) {
   const [profiles, setProfiles] = useState([])
   const { address } = useAccount()
@@ -96,6 +98,7 @@ export default function AuthenticateModal({ isOpen, onClose, variant }) {
               <button onClick={() => login()} className="btn-primary">
                 Authenticate Lens
               </button>
+              <CreateProfileModal isOpen={isOpen} onClose={onClose} />
             </Center>
           </ModalBody>
         </ModalContent>

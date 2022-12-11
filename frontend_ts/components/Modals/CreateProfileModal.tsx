@@ -17,6 +17,8 @@ import {
 } from '@chakra-ui/react'
 import { useDropzone } from 'react-dropzone'
 import UploadModalIcon from '../Icons/UploadModalIcon'
+import { createProfile } from '../../lensCalls'
+import useAuth from '../../hooks/useAuth'
 
 const baseStyle = {
   flex: 1,
@@ -43,11 +45,13 @@ const rejectStyle = {
   borderColor: '#ff1744',
 }
 
-const UploadImage = ({ isOpen, onClose }) => {
+const CreateProfileModal = ({ isOpen, onClose }) => {
   const [loading, setLoading] = useState(false)
   const [name, setName] = useState('')
   const [bio, setBio] = useState('')
   const [profileImg, setProfileImg] = useState('')
+
+  //const { setAuth } = useAuth()
 
   const {
     getRootProps,
@@ -77,6 +81,21 @@ const UploadImage = ({ isOpen, onClose }) => {
 
     reader.readAsDataURL(acceptedFiles[0])
     return profileImg
+  }
+
+  const handleSubmit = async (e) => {
+    e.preventDefault()
+    try {
+      const request = {
+        handle: name,
+      }
+      const response = await createProfile(request)
+      console.log('CREATED PROFILE!', response)
+      localStorage.setItem('lens_handle', `${name}.test`)
+      //setAuth({ lens_handle: selected })
+    } catch (error) {
+      console.log('ERROR', error)
+    }
   }
 
   async function handleOnSubmit(event) {
@@ -153,4 +172,4 @@ const UploadImage = ({ isOpen, onClose }) => {
   )
 }
 
-export default UploadImage
+export default CreateProfileModal
