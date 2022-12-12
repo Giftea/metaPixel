@@ -123,6 +123,9 @@ const Profile = () => {
             <Text textAlign="center" mr={6} fontSize="4xl">
               {profiles?.name}
             </Text>
+            <Text textAlign="center" mr={6} fontSize="xl">
+              {profiles?.handle}
+            </Text>
             {address === profiles?.ownedBy ? (
               <button
                 className="btn-outline"
