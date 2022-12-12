@@ -33,7 +33,15 @@ const EditProfile = () => {
     //     `Oops! Something went wrong. Please refresh and try again. Error ${error}`
     //   )
     // }
-    alert('submit')
+    // alert('submit')
+    try {
+      await setMetadata({
+        name: name,
+        bio: bio,
+      })
+    } catch (error) {
+      alert('Error : Profile not updated')
+    }
   }
 
   return (
