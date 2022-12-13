@@ -6,7 +6,7 @@ contract Pixeed {
     event NewImageUploaded(
         uint256 profileId,
         bytes32 imageID,
-        string imageCID
+        bytes32 imageCID
     );
 
     event NewProfileCreated (
@@ -14,6 +14,10 @@ contract Pixeed {
         bytes32 name,
         string bio,
         bytes32 profileImageDataCID );
+
+    event LikedImagesPerProfile (
+        bytes32[] imageCIDs
+    );
 
     struct CreateProfile {
         uint256 profileId;
@@ -29,7 +33,7 @@ contract Pixeed {
         bytes32 imageTitle;
         string imageDescription;
         string imageTags;
-        string imageCID;
+        bytes32 imageCID;
         uint32 likes;
     }
 
@@ -69,7 +73,7 @@ contract Pixeed {
         bytes32 imageTitle, 
         string calldata imageDescription, 
         string calldata imageTags, 
-        string calldata imageCID)
+        bytes32 imageCID)
         
         external {
         uint256 profileId = addressToProfile[msg.sender].profileId;
@@ -95,7 +99,31 @@ contract Pixeed {
 
     function likeImage(bytes32 imageID) external{
         imageIdToCreateImageUpload[imageID].likes ++;
-
-        //addressToProfile[msg.sender] 
+        addressToProfile[msg.sender].likedImageIDs.push(imageID);
     }
+
+    function getLikedImagesCID() external {
+        // look for likedimages in profile 
+        bytes32[] memory likedImagesIDs = addressToProfile[msg.sender].likedImageIDs;
+        bytes32[] memory likedImagesCID;
+
+        for (uint32 i=0; i < likedImagesIDs.length; i++) {
+            likedImagesCID[i] = imageIdToCreateImageUpload[likedImagesIDs[i]].imageCID;
+        }
+
+        emit LikedImagesPerProfile(likedImagesCID);
+    }
+
+    // function dislikeImage(bytes32 imageID ) external{
+    //     imageIdToCreateImageUpload[imageID].likes = imageIdToCreateImageUpload[imageID].likes-1;
+    //     uint indexOfElement = addressToProfile[msg.sender].likedImageIDs[imageID];
+    //     uint arrayLength = addressToProfile[msg.sender].likedImageIDs.length;
+
+    //     for (uint i = indexOfElement; i<arrayLength-1; i++){
+    //         addressToProfile[msg.sender].likedImageIDs[i] = addressToProfile[msg.sender].likedImageIDs[i+1];
+    //     }
+    //     addressToProfile[msg.sender].likedImageIDs.pop();
+    // }
+
+
 }
