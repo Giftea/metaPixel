@@ -109,15 +109,15 @@ contract Pixeed {
 
     function likeImage(bytes32 imageID) external{
         require (addressToProfile[msg.sender].valid , "NO PROFILE EXISTS");
-        require (imageID = imageIdToCreateImageUpload[imageID].imageID, "IMAGE DOESNT EXISTS");
-
+        require (imageID == imageIdToCreateImageUpload[imageID].imageID, "IMAGE DOESNT EXISTS");
+        
         imageIdToCreateImageUpload[imageID].likes ++;
         addressToProfile[msg.sender].likedImageIDs.push(imageID);
     }
 
     function dislikeImage(bytes32 imageID ) external {
         require (addressToProfile[msg.sender].valid , "NO PROFILE EXISTS");
-        require (imageID = imageIdToCreateImageUpload[imageID].imageID, "IMAGE DOESNT EXISTS");
+        require (imageID == imageIdToCreateImageUpload[imageID].imageID, "IMAGE DOESNT EXISTS");
 
         uint32 likes = imageIdToCreateImageUpload[imageID].likes;
         imageIdToCreateImageUpload[imageID].likes = likes - 1;
