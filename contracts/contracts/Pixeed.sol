@@ -84,6 +84,8 @@ contract Pixeed {
         bytes32 imageCID)
         
         external {
+        require (addressToProfile[msg.sender].valid , "NO PROFILE EXISTS");
+
         uint256 profileId = addressToProfile[msg.sender].profileId;
         bytes32 imageID = keccak256(
             abi.encodePacked(
@@ -106,11 +108,16 @@ contract Pixeed {
     }
 
     function likeImage(bytes32 imageID) external{
+        require (addressToProfile[msg.sender].valid , "NO PROFILE EXISTS");
+        require (imageID = imageIdToCreateImageUpload[imageID].imageID, "IMAGE DOESNT EXISTS");
+
         imageIdToCreateImageUpload[imageID].likes ++;
         addressToProfile[msg.sender].likedImageIDs.push(imageID);
     }
 
     function dislikeImage(bytes32 imageID ) external {
+        require (addressToProfile[msg.sender].valid , "NO PROFILE EXISTS");
+        require (imageID = imageIdToCreateImageUpload[imageID].imageID, "IMAGE DOESNT EXISTS");
 
         uint32 likes = imageIdToCreateImageUpload[imageID].likes;
         imageIdToCreateImageUpload[imageID].likes = likes - 1;
@@ -126,6 +133,7 @@ contract Pixeed {
 
     // not needed when using the graph
     function getLikedImagesCID() external {
+        require (addressToProfile[msg.sender].valid , "NO PROFILE EXISTS");
         // look for likedimages in profile 
         bytes32[] memory likedImagesIDs = addressToProfile[msg.sender].likedImageIDs;
         bytes32[] memory likedImagesCID;
