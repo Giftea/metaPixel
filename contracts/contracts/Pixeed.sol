@@ -25,6 +25,7 @@ contract Pixeed {
         string bio;
         bytes32 profileImageDataCID;
         bytes32[] likedImageIDs;
+        bool valid;
     }
 
     struct CreateImageUpload {
@@ -41,7 +42,6 @@ contract Pixeed {
 
     uint256 profileIdCounter;
 
-    mapping(uint256 => CreateProfile) public idToProfile;
     mapping(address => CreateProfile) public addressToProfile;
 
     // only address which doesnt have a profile now
@@ -50,16 +50,18 @@ contract Pixeed {
         string calldata bio,
         bytes32 profileImageDataCID
     ) external {
+        require (!addressToProfile[msg.sender].valid, "ALREADY HAVING A PROFILE");        
         profileIdCounter ++;
         uint256 profileId = profileIdCounter;
         bytes32[] memory likedImageIDs;
 
-        idToProfile[profileId] = CreateProfile(
+        addressToProfile[msg.sender] = CreateProfile(
             profileId,
             name,
             bio, 
             profileImageDataCID,
-            likedImageIDs
+            likedImageIDs,
+            true
         );
 
         emit NewProfileCreated(
@@ -67,6 +69,12 @@ contract Pixeed {
             name,
             bio, 
             profileImageDataCID);
+    }
+
+    function editProfile(string memory _bio, bytes32 _name) external {
+        require (addressToProfile[msg.sender].valid , "NO PROFILE EXISTS");
+        addressToProfile[msg.sender].bio = _bio;
+        addressToProfile[msg.sender].name = _name;
     }
 
     function uploadImage (
@@ -102,6 +110,21 @@ contract Pixeed {
         addressToProfile[msg.sender].likedImageIDs.push(imageID);
     }
 
+    function dislikeImage(bytes32 imageID ) external {
+
+        uint32 likes = imageIdToCreateImageUpload[imageID].likes;
+        imageIdToCreateImageUpload[imageID].likes = likes - 1;
+        uint arrayLength = addressToProfile[msg.sender].likedImageIDs.length;
+
+        for (uint i = 0; i < arrayLength-1; i++){
+            if (addressToProfile[msg.sender].likedImageIDs[i] != imageID) {
+                addressToProfile[msg.sender].likedImageIDs[i] = addressToProfile[msg.sender].likedImageIDs[i+1];
+            }
+        }
+        addressToProfile[msg.sender].likedImageIDs.pop();
+    }
+
+    // not needed when using the graph
     function getLikedImagesCID() external {
         // look for likedimages in profile 
         bytes32[] memory likedImagesIDs = addressToProfile[msg.sender].likedImageIDs;
@@ -113,17 +136,5 @@ contract Pixeed {
 
         emit LikedImagesPerProfile(likedImagesCID);
     }
-
-    // function dislikeImage(bytes32 imageID ) external{
-    //     imageIdToCreateImageUpload[imageID].likes = imageIdToCreateImageUpload[imageID].likes-1;
-    //     uint indexOfElement = addressToProfile[msg.sender].likedImageIDs[imageID];
-    //     uint arrayLength = addressToProfile[msg.sender].likedImageIDs.length;
-
-    //     for (uint i = indexOfElement; i<arrayLength-1; i++){
-    //         addressToProfile[msg.sender].likedImageIDs[i] = addressToProfile[msg.sender].likedImageIDs[i+1];
-    //     }
-    //     addressToProfile[msg.sender].likedImageIDs.pop();
-    // }
-
 
 }
