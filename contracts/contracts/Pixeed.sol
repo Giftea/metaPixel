@@ -27,6 +27,13 @@ contract Pixeed {
         bytes32 imageID
     );
 
+    event ProfileEdited (
+        address profileAddress, 
+        bytes32 name, 
+        string bio, 
+        bytes32 profileImageDataCID
+    );
+
     struct CreateProfile {
         uint256 profileId;
         bytes32 name;
@@ -79,10 +86,13 @@ contract Pixeed {
             profileImageDataCID);
     }
 
-    function editProfile(string memory _bio, bytes32 _name) external {
+    function editProfile(string memory _bio, bytes32 _name, bytes32 _profileImageDataCID) external {
         require (addressToProfile[msg.sender].valid , "NO PROFILE EXISTS");
         addressToProfile[msg.sender].bio = _bio;
         addressToProfile[msg.sender].name = _name;
+        addressToProfile[msg.sender].profileImageDataCID = _profileImageDataCID;
+
+        emit ProfileEdited (msg.sender, _name, _bio, _profileImageDataCID);
     }
 
     function uploadImage (
