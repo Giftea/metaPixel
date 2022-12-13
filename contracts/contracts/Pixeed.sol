@@ -19,6 +19,14 @@ contract Pixeed {
         bytes32[] imageCIDs
     );
 
+    event ImageLiked (
+        bytes32 imageID
+    );
+
+    event ImageDisliked (
+        bytes32 imageID
+    );
+
     struct CreateProfile {
         uint256 profileId;
         bytes32 name;
@@ -113,6 +121,8 @@ contract Pixeed {
         
         imageIdToCreateImageUpload[imageID].likes ++;
         addressToProfile[msg.sender].likedImageIDs.push(imageID);
+
+        emit ImageLiked(imageID);
     }
 
     function dislikeImage(bytes32 imageID ) external {
@@ -129,6 +139,8 @@ contract Pixeed {
             }
         }
         addressToProfile[msg.sender].likedImageIDs.pop();
+
+        emit ImageDisliked (imageID);
     }
 
     // not needed when using the graph
