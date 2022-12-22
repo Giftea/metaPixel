@@ -16,8 +16,7 @@ const Hero = () => {
       <Box textAlign={"center"} py={20} my={14} width={"70%"}>
         <Text fontSize="5xl">{heroText.title}</Text>
         <Text my={8} px={20}>
-          Lorem ipsum Lorem ipsumLorem ipsumLorem ipsumLorem ipsum Lorem
-          ipsumLorem ipsumLorem ipsumLorem ipsumLorem ipsum
+          Create an online portfolio and build an audience based on the content you upload
         </Text>
         <SearchForm />
       </Box>

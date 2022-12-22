@@ -7,7 +7,7 @@ import {
 
 // const httpLink = new HttpLink({ uri: "https://api.lens.dev" });
 // was originally^^
-const httpLink = new HttpLink({ uri: "https://api-mumbai.lens.dev" });
+const httpLink = new HttpLink({ uri: "https://api.lens.dev" });
 const authLink = new ApolloLink((operation, forward) => {
   const token = localStorage.getItem("lens_auth_token");
 

@@ -78,20 +78,15 @@ export const CustomConnectButton = () => {
               }
               return (
                 <div style={{ display: "flex", gap: 12 }}>
-                  {profiles.length > 0 ? (
-                    <button
-                      className="btn-outline"
-                      onClick={openAccountModal}
-                      type="button"
-                    >
-                      {account.displayName}
-                      {/* {profiles[0]?.handle} */}
-                    </button>
-                  ) : (
-                    <button onClick={() => onOpen()} className="btn-primary">
-                      Create Lens Profile
-                    </button>
-                  )}
+                  <button
+                    className="btn-outline"
+                    onClick={openAccountModal}
+                    type="button"
+                  >
+                    {account.displayName}
+                    {/* {profiles[0]?.handle} */}
+                  </button>
+
                   <AuthenticateModal
                     variant="create-profile"
                     isOpen={isOpen}

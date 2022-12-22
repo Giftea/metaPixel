@@ -1,27 +1,28 @@
-import { Stack, Avatar } from "@chakra-ui/react";
+import { Stack, Avatar, useDisclosure, Text } from "@chakra-ui/react";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import LensLogin from "./LensLogin";
 import { getProfiles } from "../../lensCalls";
 import { useAccount } from "wagmi";
 import { useEffect, useState } from "react";
+import UploadImage from "../Modals/UploadImage";
 
 const Navbar = () => {
+  const { isOpen, onOpen, onClose } = useDisclosure();
   const router = useRouter();
   const { address } = useAccount();
-  const [profiles, setProfiles] = useState();
+  const [profile, setProfile] = useState({});
   const [imgUrl, setImgUrl] = useState("");
 
-  async function fetchProfiles(useraddress) {
+  async function fetchProfile(useraddress) {
     try {
       let response = await getProfiles({
         ownedBy: [`${useraddress}`],
         limit: 10,
       });
-      setProfiles(response?.data?.profiles?.items[0]);
-
+      setProfile(response?.data?.profiles?.items[0]);
       if (response?.data) {
-        const url = profiles?.picture?.original?.url;
+        const url = profile?.picture?.original?.url;
         const slice = url?.slice(url.lastIndexOf("/"), url?.length);
         setImgUrl(`https://lens.infura-ipfs.io/ipfs${slice}`);
       }
@@ -31,7 +32,7 @@ const Navbar = () => {
   }
 
   useEffect(() => {
-    fetchProfiles(address);
+    fetchProfile(address);
   }, [address]);
 
   return (
@@ -48,7 +49,7 @@ const Navbar = () => {
       boxShadow="md"
     >
       <Link href="/" className="text-2xl">
-        Pixeed
+        <Text fontSize='4xl'>Pixeed</Text>
       </Link>
 
       <Stack
@@ -56,18 +57,23 @@ const Navbar = () => {
         alignItems={"center"}
         direction={"row"}
       >
-        {address && <button className="btn-primary">Upload Photo</button>}
+        {address && (
+          <button className="btn-primary" onClick={() => onOpen()}>
+            Upload Photo
+          </button>
+        )}
         <LensLogin />
-        {profiles && (
+        {profile && (
           <Avatar
             src={imgUrl}
-            name={profiles?.name}
-            onClick={() => router.push(`/profile/${profiles?.handle}`)}
+            name={profile?.name}
+            onClick={() => router.push(`/profile/${profile?.handle}`)}
             border="2px solid #625DA0"
             cursor={"pointer"}
           />
         )}
       </Stack>
+      <UploadImage isOpen={isOpen} onClose={onClose} />
     </Stack>
   );
 };

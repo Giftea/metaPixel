@@ -4,18 +4,17 @@ import { midnightTheme } from "@rainbow-me/rainbowkit";
 import { ChakraProvider } from "@chakra-ui/react";
 import { getDefaultWallets, RainbowKitProvider } from "@rainbow-me/rainbowkit";
 import { chain, configureChains, createClient, WagmiConfig } from "wagmi";
-import { jsonRpcProvider } from "wagmi/providers/jsonRpc";
+import { infuraProvider } from "wagmi/providers/infura";
+import { publicProvider } from "wagmi/providers/public";
 import { AuthProvider } from "../context/AuthProvider";
+import { ApolloProvider } from "@apollo/client";
+import {client }from "../apollo-client";
 
+const infuraId = process.env.NEXT_PUBLIC_INFURA_ID;
 const { chains, provider } = configureChains(
   [chain.polygonMumbai],
-  [
-    jsonRpcProvider({
-      rpc: (chain) => ({
-        http: "https://rpc-mumbai.matic.today",
-      }),
-    }),
-  ]
+
+  [infuraProvider({ infuraId }), publicProvider()]
 );
 
 const { connectors } = getDefaultWallets({
@@ -38,9 +37,11 @@ function MyApp({ Component, pageProps }) {
           chains={chains}
           theme={midnightTheme({ accentColor: "#9932cc" })}
         >
-          <ChakraProvider>
-            <Component {...pageProps} />
-          </ChakraProvider>
+          <ApolloProvider client={client}>
+            <ChakraProvider>
+              <Component {...pageProps} />
+            </ChakraProvider>
+          </ApolloProvider>
         </RainbowKitProvider>
       </WagmiConfig>
     </AuthProvider>
