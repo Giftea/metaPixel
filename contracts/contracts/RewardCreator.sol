@@ -3,21 +3,28 @@ pragma solidity ^0.8.9;
 
 import {IERC20} from "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import {AccessControlEnumerable} from "@openzeppelin/contracts/access/AccessControlEnumerable.sol";
+import {Initializable} from "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol";
 
-contract RewardCreator is AccessControlEnumerable {
+contract RewardCreator is Initializable, AccessControlEnumerable {
     // contant for AccessControl of PIXEED_TEAM members
     bytes32 public constant PIXEED_TEAM = keccak256("PIXEED_TEAM");
     
-    IERC20 public immutable ierc20;
+    IERC20 public ierc20;
 
     event RewardedCreator (address creatorAddress, uint256 amountToCreator);
     event ContractRewarded (address pixeedContractAddress, uint256 amountToPixeed);
 
     event FundingForPixeedWithdrawed(uint roleMemberCount, uint withdrawAmount);
+    
+    // constructor (
+    //     address erc20Address
+    // ) {
+    //     _grantRole(DEFAULT_ADMIN_ROLE, msg.sender);
+    //     _grantRole(PIXEED_TEAM, msg.sender);
+    //     ierc20 = IERC20(erc20Address);
+    // }
 
-    constructor (
-        address erc20Address
-    ) {
+    function initialize(address erc20Address) initializer public {
         _grantRole(DEFAULT_ADMIN_ROLE, msg.sender);
         _grantRole(PIXEED_TEAM, msg.sender);
         ierc20 = IERC20(erc20Address);

@@ -22,8 +22,9 @@ describe("RewardCreator", function () {
     // Create instance of contract
     rewardCreator = await ethers.getContractFactory("RewardCreator");
     // deploy
-    hardhatRewardCreator = await rewardCreator.deploy(hardhatMockERC20.address);
+    hardhatRewardCreator = await rewardCreator.deploy();
     await hardhatRewardCreator.deployed();
+    await hardhatRewardCreator.initialize(hardhatMockERC20.address);
   });
 
   describe("Deployment", function () {
